@@ -38,7 +38,7 @@ class App extends Component<{}, State> {
 
   handleLogin = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     if ("tokenObj" in res) {
-      console.log(Logged in as ${res.profileObj.name});
+      console.log(`Logged in as ${res.profileObj.name}`);
       const userToken = res.tokenObj.id_token;
       post("/api/login", { token: userToken }).then((user: User) => {
         this.setState({ userId: user._id });
