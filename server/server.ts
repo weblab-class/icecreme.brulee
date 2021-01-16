@@ -15,7 +15,7 @@ dotenv.config({});
 // TODO change connection URL after setting up your team database
 const mongoConnectionURL = process.env.MONGO_SRV;
 // TODO change database name to the name you chose
-const databaseName = "IncludeYourDatabaseNameHere";
+const databaseName = "icecreme-bruleedb";
 
 if (mongoConnectionURL === undefined) {
   throw new Error("Please add the MongoDB connection SRV as 'MONGO_SRV'");
