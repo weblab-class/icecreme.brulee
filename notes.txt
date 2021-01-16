@@ -1,0 +1,5 @@
+to kill terminals that are still running
+lsof -i tcp:3000
+kill -9 8390
+
+or pkill -9 node
