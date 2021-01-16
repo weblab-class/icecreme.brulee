@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express, { Request, Response } from "express";
 import http from "http";
 import session from "express-session"; // Allows us to store information about a client

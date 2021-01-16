@@ -1,0 +1,2 @@
+MONGO_SRV = mongodb+srv://<username>:<password>@cluster0.wzqst.mongodb.net/<dbname>?retryWrites=true&w=majority
+SESSION_SECRET = "ilikecats"
