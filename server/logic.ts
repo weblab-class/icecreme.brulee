@@ -51,7 +51,7 @@ export const addPlayer = (name:String, id:String) => {
 }
 
 export const removePlayer = (id:String) => {
-    gameState.playerList.filter((player) => player._id !== id)
+    gameState.playerList = gameState.playerList.filter((player) => player._id !== id)
     gameState.idToPlayerMap.delete(String(id));
   };
 

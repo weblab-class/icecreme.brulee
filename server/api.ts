@@ -35,7 +35,6 @@ router.post("/removeSocket", (req, res) => {
   if (req.user) {
     const socket = socketManager.getSocketFromSocketID(req.body.socketid);
     if (socket !== undefined) socketManager.removeUser(req.user, socket);
-    console.log('successfully removed socket')
   }
   res.send({});
 });
