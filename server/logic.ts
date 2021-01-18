@@ -69,7 +69,7 @@ const setNextTurn = () => {
     } else {
         //simply update game state and who the players are
         gameState.asker = gameState.playerList[gameState.turn-1]
-        gameState.asker = gameState.playerList[gameState.turn]
+        gameState.answerer = gameState.playerList[gameState.turn]
     }
 }
 
