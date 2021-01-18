@@ -6,8 +6,10 @@ interface gameState {
     playerList: Player[]
     idToPlayerMap: Map<string, Player>;
     turn: number;
-    chosen?: Player;
     state?: "rps" | "question";
+    asker?: Player;
+    answerer?: Player;
+    chosen?: Player;
 }
 
 type rps = "rock" | "paper" | "scissors";
@@ -51,6 +53,28 @@ export const removePlayer = (id:String) => {
     gameState.idToPlayerMap.delete(String(id));
     console.log(gameState.playerList);
   };
+
+//set asker and answerer given the turn; update turn
+const setNextTurn = () => {
+    gameState.turn = gameState.turn + 1
+    if (gameState.turn === gameState.playerList.length) {
+        gameState.asker = gameState.playerList[gameState.turn-1]
+        gameState.answerer = gameState.playerList[0]
+    } else if (gameState.turn > gameState.playerList.length) {
+        //if we reach the end of the list, we will reset the turn
+        gameState.turn = 1
+        gameState.asker = gameState.playerList[0]
+        gameState.answerer = gameState.playerList[1]
+    } else {
+        //simply update game state and who the players are
+        gameState.asker = gameState.playerList[gameState.turn-1]
+        gameState.asker = gameState.playerList[gameState.turn]
+    }
+}
+
+const setChosenPlayer = (chosenPlayer: Player) => {
+    gameState.chosen = chosenPlayer
+}
 
 export default {
     gameState,
