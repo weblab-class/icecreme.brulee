@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 import "./Skeleton.css";
-//TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
+
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 type Props = {
   userId: String;
