@@ -61,7 +61,6 @@ class App extends Component<{}, State> {
         this.setState({
           activePlayers: playerList,
         });
-        // console.log(JSON.stringify(data.activeUsers));
       });
       
       socket.on("activeUsers", (data) => {
@@ -73,8 +72,7 @@ class App extends Component<{}, State> {
         this.setState({
           activePlayers: playerList,
         });
-        // console.log(JSON.stringify(data.activeUsers));
-      })
+      });
   }
 
   handleLogin = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
@@ -87,18 +85,7 @@ class App extends Component<{}, State> {
           _id:user._id
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer});
-        post("/api/initsocket", { socketid: socket.id }).then(()=>
-        get("/api/activeUsers").then((data) => {
-          const playerList : Player[] = [];
-          for (let i = 0; i < data.activeUsers.length; i++) {
-            const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
-            playerList.push(newPlayer)
-          }
-          this.setState({
-            activePlayers: playerList,
-          });
-          console.log(JSON.stringify(data.activeUsers));
-        }));
+        post("/api/initsocket", { socketid: socket.id });
       });
     }
   };
@@ -109,7 +96,9 @@ class App extends Component<{}, State> {
       _id:undefined
     };
     this.setState({ userId: undefined, currentPlayer: blankPlayer , loggedIn:false});
-    post("/api/logout");
+    post("/api/removeSocket", { socketid: socket.id }).then(()=>{
+      post("/api/logout");
+    });
   };
 
   render() {

@@ -31,6 +31,15 @@ router.get("/activeUsers", (req, res) => {
   res.send({ activeUsers: socket.getAllConnectedUsers() });
 });
 
+router.post("/removeSocket", (req, res) => {
+  if (req.user) {
+    const socket = socketManager.getSocketFromSocketID(req.body.socketid);
+    if (socket !== undefined) socketManager.removeUser(req.user, socket);
+    console.log('successfully removed socket')
+  }
+  res.send({});
+});
+
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   const msg = `Api route not found: ${req.method} ${req.url}`;
