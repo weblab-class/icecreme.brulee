@@ -3,8 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import User from "./models/User";
 import UserInterface from "../shared/User";
 
-// create a new OAuth client used to verify google sign-in
-//    TODO: replace with your own CLIENT_ID
+
 const CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 

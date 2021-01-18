@@ -1,12 +1,29 @@
 import React, { Component } from "react";
-import { Router } from "@reach/router";
-import { get, post } from "../utilities";
-import NotFound from "./pages/NotFound";
-import Skeleton from "./pages/Skeleton";
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
-import { socket } from "../client-socket";
-import User from "../../../shared/User";
 import "../utilities.css";
+
+
+export interface Player {
+    _id: String;
+    name: String;
+}
+
+interface Props {
+    player: Player
+}
+class PlayerBlock extends Component<Props> {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div>
+                {this.props.player.name}
+            </div>
+        )
+    }
+}
+
+export default PlayerBlock;
 /*
 class Player extends Component{
     constructor(props) = {

@@ -6,11 +6,16 @@ import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
+import {Player} from "./Player";
+import PlayerList from "./PlayerList";
 import "../utilities.css";
 //import GameRoom from "./pages/GameRoom";
 
+
+
 type State = {
   userId: String;
+  currentPlayer: Player;
 };
 
 class App extends Component<{}, State> {
@@ -18,6 +23,10 @@ class App extends Component<{}, State> {
     super(props);
     this.state = {
       userId: undefined,
+      currentPlayer: {
+        name:"",
+        _id: undefined
+      },
     };
   }
 
@@ -41,13 +50,21 @@ class App extends Component<{}, State> {
       console.log(`Logged in as ${res.profileObj.name}`);
       const userToken = res.tokenObj.id_token;
       post("/api/login", { token: userToken }).then((user: User) => {
-        this.setState({ userId: user._id });
+        const currentPlayer: Player = {
+          name:res.profileObj.name,
+          _id:user._id
+        };
+        this.setState({ userId: user._id, currentPlayer: currentPlayer});
       });
     }
   };
 
   handleLogout = () => {
-    this.setState({ userId: undefined });
+    const blankPlayer: Player = {
+      name:"",
+      _id:undefined
+    };
+    this.setState({ userId: undefined, currentPlayer: blankPlayer });
     post("/api/logout");
   };
 
@@ -55,15 +72,18 @@ class App extends Component<{}, State> {
     // NOTE:
     // All the pages need to have the props defined in RouteComponentProps for @reach/router to work properly. Please use the Skeleton as an example.
     return (
-      <Router>
-        <Skeleton
-          path="/"
-          handleLogin={this.handleLogin}
-          handleLogout={this.handleLogout}
-          userId={this.state.userId}
-        />
-        <NotFound default={true} />
-      </Router>
+      <>
+        <Router>
+          <Skeleton
+            path="/"
+            handleLogin={this.handleLogin}
+            handleLogout={this.handleLogout}
+            userId={this.state.userId}
+          />
+          <NotFound default={true} />
+        </Router>
+        <PlayerList playerList={[this.state.currentPlayer]}/>
+      </>
     );
   }
 }
