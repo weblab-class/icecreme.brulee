@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "../utilities.css";
+import Player from "../../../shared/Player";
 
-
-export interface Player {
-    _id: String;
-    name: String;
-}
+// export interface Player {
+//     _id: String;
+//     name: String;
+// }
 
 interface Props {
     player: Player

@@ -6,11 +6,10 @@ import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
-import {Player} from "./Player";
+//import {Player} from "./Player";
+import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
 import "../utilities.css";
-//import GameRoom from "./pages/GameRoom";
-
 
 
 type State = {

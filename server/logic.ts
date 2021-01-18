@@ -1,9 +1,11 @@
-import {Player} from "../client/src/components/Player";
+//import {Player} from "../client/src/components/Player";
+import {Player} from "../shared/Player";
+
 
 /** game state */
 
 interface gameState {
-    playerList: Player[]
+    playerList: Player[];
     idToPlayerMap: Map<string, Player>;
     turn: number;
     state?: "rps" | "question";

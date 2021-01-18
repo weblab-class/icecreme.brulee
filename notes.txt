@@ -12,3 +12,13 @@ interface User {
 }
 
 handleChange = (event. React.)
+
+src/typings/custom/index.d.ts
+
+declare module '*.png' { // eslint-disable-next-line @typescript-eslint/no-explicit-any const value: any; export default value; }
+
+client-tsconfig.json
+
+"typeRoots": ["./node_modules/@types", "@typings"]
+
+^ add this inside of "compilerOptions"
