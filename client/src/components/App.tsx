@@ -16,6 +16,8 @@ import "../utilities.css";
 type State = {
   userId: String;
   currentPlayer: Player;
+  activePlayers: Player[];
+  loggedIn: boolean;
 };
 
 class App extends Component<{}, State> {
@@ -27,6 +29,8 @@ class App extends Component<{}, State> {
         name:"",
         _id: undefined
       },
+      activePlayers: [],
+      loggedIn: false,
     };
   }
 
@@ -35,14 +39,42 @@ class App extends Component<{}, State> {
       .then((user: User) => {
         if (user._id) {
           // TRhey are registed in the database and currently logged in.
-          this.setState({ userId: user._id });
+          const currentPlayer: Player = {
+            name:user.name,
+            _id:user._id
+          };
+          this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn: true});
         }
       })
       .then(() =>
         socket.on("connect", () => {
           post("/api/initsocket", { socketid: socket.id });
         })
-      );
+      )
+
+      get("/api/activeUsers").then((data) => {
+        const playerList : Player[] = [];
+        for (let i = 0; i < data.activeUsers.length; i++) {
+          const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+          playerList.push(newPlayer)
+        }
+        this.setState({
+          activePlayers: playerList,
+        });
+        // console.log(JSON.stringify(data.activeUsers));
+      });
+      
+      socket.on("activeUsers", (data) => {
+        const playerList : Player[] = [];
+        for (let i = 0; i < data.activeUsers.length; i++) {
+          const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+          playerList.push(newPlayer)
+        }
+        this.setState({
+          activePlayers: playerList,
+        });
+        // console.log(JSON.stringify(data.activeUsers));
+      })
   }
 
   handleLogin = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
@@ -55,6 +87,18 @@ class App extends Component<{}, State> {
           _id:user._id
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer});
+        post("/api/initsocket", { socketid: socket.id }).then(()=>
+        get("/api/activeUsers").then((data) => {
+          const playerList : Player[] = [];
+          for (let i = 0; i < data.activeUsers.length; i++) {
+            const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+            playerList.push(newPlayer)
+          }
+          this.setState({
+            activePlayers: playerList,
+          });
+          console.log(JSON.stringify(data.activeUsers));
+        }));
       });
     }
   };
@@ -64,7 +108,7 @@ class App extends Component<{}, State> {
       name:"",
       _id:undefined
     };
-    this.setState({ userId: undefined, currentPlayer: blankPlayer });
+    this.setState({ userId: undefined, currentPlayer: blankPlayer , loggedIn:false});
     post("/api/logout");
   };
 
@@ -82,7 +126,7 @@ class App extends Component<{}, State> {
           />
           <NotFound default={true} />
         </Router>
-        <PlayerList playerList={[this.state.currentPlayer]}/>
+        <PlayerList playerList={this.state.activePlayers}/>
       </>
     );
   }

@@ -6,6 +6,7 @@ let io: Server;
 const userToSocketMap: Map<string, Socket> = new Map<string, Socket>(); // maps user ID to socket object
 const socketToUserMap: Map<string, User> = new Map<string, User>(); // maps socket ID to user object
 
+export const getAllConnectedUsers = () => Array.from(socketToUserMap.values());
 export const getSocketFromUserID = (userid: string) => userToSocketMap.get(userid);
 export const getUserFromSocketID = (socketid: string) => socketToUserMap.get(socketid);
 export const getSocketFromSocketID = (socketid: string) => io.sockets.sockets.get(socketid);
@@ -20,11 +21,15 @@ export const addUser = (user: User, socket: Socket): void => {
   }
   userToSocketMap.set(user._id, socket);
   socketToUserMap.set(socket.id, user);
+  // TODO: add multiple rooms
+  io.emit("activeUsers", { activeUsers: getAllConnectedUsers() });
 };
 
 export const removeUser = (user: User, socket: Socket): void => {
   if (user) userToSocketMap.delete(user._id);
   socketToUserMap.delete(socket.id);
+
+  io.emit("activeUsers", { activeUsers: getAllConnectedUsers() });
 };
 
 export const init = (server: http.Server): void => {
@@ -49,4 +54,5 @@ export default {
   getSocketFromSocketID,
   getUserFromSocketID,
   getSocketFromUserID,
+  getAllConnectedUsers
 };

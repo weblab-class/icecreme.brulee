@@ -3,6 +3,8 @@ import auth from "./auth";
 import socketManager from "./server-socket";
 const router = express.Router();
 
+const socket = require("./server-socket");
+
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
@@ -25,7 +27,9 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
-// router.post("/addplayer");
+router.get("/activeUsers", (req, res) => {
+  res.send({ activeUsers: socket.getAllConnectedUsers() });
+});
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
