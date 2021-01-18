@@ -1,6 +1,7 @@
 import type http from "http";
 import { Server, Socket } from "socket.io";
 import User from "../shared/User";
+import gameState, {getRPSWinner, addPlayer, removePlayer} from "./logic";
 let io: Server;
 
 const userToSocketMap: Map<string, Socket> = new Map<string, Socket>(); // maps user ID to socket object
@@ -21,6 +22,8 @@ export const addUser = (user: User, socket: Socket): void => {
   }
   userToSocketMap.set(user._id, socket);
   socketToUserMap.set(socket.id, user);
+
+  addPlayer(user.name, user._id);
   // TODO: add multiple rooms
   io.emit("activeUsers", { activeUsers: getAllConnectedUsers() });
 };
@@ -28,7 +31,8 @@ export const addUser = (user: User, socket: Socket): void => {
 export const removeUser = (user: User, socket: Socket): void => {
   if (user) userToSocketMap.delete(user._id);
   socketToUserMap.delete(socket.id);
-
+  //TODO: add multiple rooms
+  removePlayer(user._id);
   io.emit("activeUsers", { activeUsers: getAllConnectedUsers() });
 };
 

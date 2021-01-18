@@ -1,9 +1,10 @@
-import Player from "../client/src/components/Player"
+import {Player} from "../client/src/components/Player";
 
 /** game state */
 
 interface gameState {
-    playerList: Player[];
+    playerList: Player[]
+    idToPlayerMap: Map<string, Player>;
     turn: number;
     chosen?: Player;
     state?: "rps" | "question";
@@ -11,13 +12,14 @@ interface gameState {
 
 type rps = "rock" | "paper" | "scissors";
 
-const gameState: gameState = {
+export const gameState: gameState = {
     playerList: [],
+    idToPlayerMap: new Map<string, Player>(),
     turn: 0,
 }
 
 //given the chooser rps and the choice rps, returns the winner
-const getRPSWinner = (chooser: rps, choice: rps) => {
+export const getRPSWinner = (chooser: rps, choice: rps) => {
     //two player objects: need to standardize how we do this part first
     const player1 = gameState.playerList[gameState.turn]
     const player2 = gameState.chosen
@@ -37,10 +39,22 @@ const getRPSWinner = (chooser: rps, choice: rps) => {
     }
 
 //not sure if this is written correctly
-const addPlayer = (newPlayer: Player) => {
+export const addPlayer = (name:String, id:String) => {
+    const newPlayer: Player = {name: name, _id:id};
     gameState.playerList.concat(newPlayer);
+    gameState.idToPlayerMap.set(String(id), newPlayer);
+    console.log(gameState.playerList);
 }
 
-const removePlayer = (id) => {
-    delete gameState.playerList[id];
+export const removePlayer = (id:String) => {
+    gameState.playerList.filter((player) => player._id !== id)
+    gameState.idToPlayerMap.delete(String(id));
+    console.log(gameState.playerList);
+  };
+
+export default {
+    gameState,
+    getRPSWinner,
+    addPlayer,
+    removePlayer,
   };
