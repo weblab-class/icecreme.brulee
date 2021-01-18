@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 import "./Skeleton.css";
-
+//TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
+const logo = require('./icecreme_logo.jpg');
+
 type Props = {
   userId: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
@@ -16,6 +18,8 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
   render() {
     return (
       <>
+        <img src={logo} />
+
         {this.props.userId ? (
           <GoogleLogout
             clientId={GOOGLE_CLIENT_ID}
@@ -26,28 +30,12 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
         ) : (
           <GoogleLogin
             clientId={GOOGLE_CLIENT_ID}
-            buttonText="Login"
+            buttonText="Log in with Google"
             onSuccess={this.props.handleLogin}
             onFailure={(err) => console.log(err)}
           />
         )}
-        <h1>Good luck on your project :)</h1>
-        <h2> What we provide in this skeleton</h2>
-        <ul>
-          <li>Google Auth (Skeleton.js & auth.js)</li>
-          <li>Socket Infrastructure (client-socket.js & server-socket.js)</li>
-          <li>User Model (auth.js & user.js)</li>
-        </ul>
-        <h2> What you need to change</h2>
-        <ul>
-          <li>Change the font in utilities.css</li>
-          <li>Change the Frontend CLIENT_ID for Google Auth (Skeleton.js)</li>
-          <li>Change the Server CLIENT_ID for Google Auth (auth.js)</li>
-          <li>Change the Database SRV for Atlas (server.js)</li>
-          <li>Change the Database Name for MongoDB (server.js)</li>
-          <li>Add a favicon to your website at the path client/dist/favicon.ico</li>
-          <li>Update website title in client/dist/index.html</li>
-        </ul>
+        <style>{'body { background-color: #FFE7C2; }'}</style>
       </>
     )
   }
