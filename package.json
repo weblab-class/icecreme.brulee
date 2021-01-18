@@ -4,7 +4,7 @@
   "description": "Starter template for weblab students",
   "scripts": {
     "hotloader": "webpack serve --config ./webpack.config.js --mode development --port 5000",
-    "start": "TS_NODE_PROJECT='./server-tsconfig.json' nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/server.ts",
+    "start": "env TS_NODE_PROJECT='./server-tsconfig.json' nodemon --watch 'server/**/*.ts' --exec 'npx ts-node' server/server.ts",
     "build": "webpack --config ./webpack.config.js --mode production"
   },
   "author": "joyce, helen, william",
