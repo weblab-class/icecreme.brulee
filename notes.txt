@@ -1,5 +1,14 @@
+Below you can find random notes that I neeeded hehe
+
 to kill terminals that are still running
 lsof -i tcp:3000
 kill -9 8390
 
 or pkill -9 node
+
+interface User {
+    _id: string;
+    is_admin?: boolean;
+}
+
+handleChange = (event. React.)
