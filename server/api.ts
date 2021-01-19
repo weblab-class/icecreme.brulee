@@ -57,9 +57,23 @@ router.post('/choose', auth.ensureLoggedIn, (req, res) => {
   if (req.user) {
     const socket = socketManager.getSocketFromUserID(req.body.chosenPlayer._id);
     if (socket !== undefined) {
-      setNextTurn();
       socket.emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:gameState});
       console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
+    }
+  }
+})
+
+router.post('/update', auth.ensureLoggedIn, (req, res) => {
+  if (req.user) {
+    setNextTurn();
+    // const askingPlayerSocket = socketManager.getSocketFromUserID(String(gameState.asker._id));
+    // const answeringPlayerSocket = socketManager.getSocketFromUserID(String(gameState.answerer._id));
+    // if (askingPlayerSocket !== undefined && answeringPlayerSocket !== undefined) {
+    //   askingPlayerSocket.emit("update", {})
+    // }
+    if (gameState.asker!==undefined && gameState.answerer!==undefined) {
+      socketManager.getIo().emit("update", {askingPlayer:gameState.asker, answeringPlayer:gameState.answerer});
+      console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
     }
   }
 })

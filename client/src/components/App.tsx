@@ -17,8 +17,10 @@ import PlayerButtonList from "./PlayerButtonList";
 type State = {
   userId: String;
   currentPlayer: Player;
+  answeringPlayer: Player;
   activePlayers: Player[];
   loggedIn: boolean;
+  gameStarted: boolean;
   isAskingPlayer: boolean;
   isAnsweringPlayer: boolean;
   isChosenPlayer: boolean;
@@ -33,8 +35,13 @@ class App extends Component<{}, State> {
         name:"",
         _id: undefined
       },
+      answeringPlayer: {
+        name:"",
+        _id: undefined
+      },
       activePlayers: [],
       loggedIn: false,
+      gameStarted: false,
       isAskingPlayer: false,
       isAnsweringPlayer: false,
       isChosenPlayer: false,
@@ -68,7 +75,7 @@ class App extends Component<{}, State> {
         this.setState({
           activePlayers: playerList,
         });
-      });
+      })
       
       socket.on("activeUsers", (data) => {
         const playerList : Player[] = [];
@@ -79,6 +86,9 @@ class App extends Component<{}, State> {
         this.setState({
           activePlayers: playerList,
         });
+        if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
+          post("/api/update", {});
+        }
       });
 
       socket.on("question", (data) => {
@@ -91,6 +101,12 @@ class App extends Component<{}, State> {
         //TODO: implement me
         console.log(`${data.gameState.answerer.name} chose you!`)
         this.setState({isChosenPlayer:true});
+      })
+
+      socket.on("update", (data) => {
+        //TODO: implement me
+        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer});
+        console.log()
       })
   }
 
@@ -135,8 +151,8 @@ class App extends Component<{}, State> {
           <NotFound default={true} />
         </Router>
         <PlayerList playerList={this.state.activePlayers}/>
-        <NewQuestionInput isAskingPlayer={this.state.loggedIn && true} answerer={this.state.currentPlayer}/>
-        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && true} playerList={this.state.activePlayers}/>
+        <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/>
+        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers}/>
       </>
     );
   }
