@@ -1,0 +1,15 @@
+/* Fill me in :) */
+.Logo{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.Login{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+    margin-top: 32%;
+}

@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { RouteComponentProps } from "@reach/router";
+import React, { Component } from "react";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
+import { RouteComponentProps } from "@reach/router";
+import "../../utilities.css";
 import "./Skeleton.css";
-import logo from "../../public/logo.svg";
-//TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
+import Login from "./Login";
+import Game from "./Game";
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 
 type Props = {
@@ -11,39 +12,20 @@ type Props = {
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
 }
-type State = {
-  loggedIn: boolean;
-}
-class Skeleton extends Component<Props & RouteComponentProps, State> {
-  render() {
-    return (
-      <>
-        <div className='Logo'>
-          <img src={logo} width="1000" />
-        </div>
 
-        <div className='Login'>
-          {this.props.userId ? (
-            <GoogleLogout
-              clientId={GOOGLE_CLIENT_ID}
-              buttonText="Logout"
-              onLogoutSuccess={this.props.handleLogout}
-              onFailure={() => console.log(`Failed to logout.`)}
-            />
-          ) : (
-            <GoogleLogin
-              clientId={GOOGLE_CLIENT_ID}
-              buttonText="Login"
-              onSuccess={this.props.handleLogin}
-              onFailure={(err) => console.log(err)}
-            />
-          )}
-        </div>
-        
-        <style>{'body { background-color: #FFF; }'}</style>
-      </>
-    )
+class Skeleton extends Component<Props & RouteComponentProps> {
+  constructor(props) {
+    super(props);
+    // Initialize Default State
+      }
+
+  componentDidMount() {
+    // remember -- api calls go here!
+  }
+
+  render() {
+    return <>{this.props.userId ? <Game userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}/> : <Login userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}
+    />}</>;
   }
 }
-
 export default Skeleton;
