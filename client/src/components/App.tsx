@@ -11,6 +11,7 @@ import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
 import NewQuestionInput from "./NewTextInput";
 import "../utilities.css";
+import PlayerButtonList from "./PlayerButtonList";
 
 
 type State = {
@@ -117,6 +118,7 @@ class App extends Component<{}, State> {
         </Router>
         <PlayerList playerList={this.state.activePlayers}/>
         <NewQuestionInput isAskingPlayer={this.state.loggedIn && true} answerer={this.state.currentPlayer}/>
+        <PlayerButtonList playerList={this.state.activePlayers}/>
       </>
     );
   }

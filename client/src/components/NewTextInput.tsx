@@ -52,11 +52,11 @@ class NewTextInput extends Component<NewTextInputProps, NewTextInputState>{
                     placeholder={this.props.defaultText}
                     value={this.state.value}
                     onChange={this.handleChange}
-                    className="NewPostInput-input"
+                    // className="NewPostInput-input"
                 />
                 <button
                     type="submit"
-                    className="NewPostInput-button u-pointer"
+                    // className="NewPostInput-button u-pointer"
                     value="Submit"
                     onClick={this.handleSubmit}
                 >
@@ -87,11 +87,9 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     askQuestion = (questionText:string) => {
         const questionBody = {answerer: this.props.answerer, questionText: questionText};
         this.setState({hasAskedQuestion:true});
-        console.log('test');
         post("/api/question", questionBody);
     }
     render() {
-        console.log(this.state.hasAskedQuestion);
         return (this.props.isAskingPlayer && !(this.state.hasAskedQuestion)) ? (<NewTextInput defaultText={`Ask a question to ${this.props.answerer.name}`} onSubmit={this.askQuestion}/>): null;
     }
 }
