@@ -1,9 +1,13 @@
 /* Fill me in :) */
 .Logo{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-
 }
 
 .Login{
     text-align: center;
+    margin-top: 350px;
 }
