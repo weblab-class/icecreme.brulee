@@ -73,16 +73,26 @@ interface NewQuestionInputProps {
     answerer: Player;
 }
 
-class NewQuestionInput extends Component<NewQuestionInputProps>{
+interface NewQuestionInputState {
+    hasAskedQuestion: boolean;
+}
+
+class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInputState>{
     constructor(props){
         super(props)
+        this.state = {
+            hasAskedQuestion : false,
+        }
     }
     askQuestion = (questionText:string) => {
         const questionBody = {answerer: this.props.answerer, questionText: questionText};
-        post("/api/question", questionBody)
+        this.setState({hasAskedQuestion:true});
+        console.log('test');
+        post("/api/question", questionBody);
     }
     render() {
-        return this.props.isAskingPlayer ? (<NewTextInput defaultText={`Ask a question to ${this.props.answerer.name}`} onSubmit={this.askQuestion}/>): null;
+        console.log(this.state.hasAskedQuestion);
+        return (this.props.isAskingPlayer && !(this.state.hasAskedQuestion)) ? (<NewTextInput defaultText={`Ask a question to ${this.props.answerer.name}`} onSubmit={this.askQuestion}/>): null;
     }
 }
 
