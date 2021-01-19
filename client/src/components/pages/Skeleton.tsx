@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 import "./Skeleton.css";
+import logo from "../../public/logo.svg";
 //TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 
@@ -18,7 +19,7 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
     return (
       <>
         <div className='Logo'>
-          <img src={'logo.jpg'} />
+          <img src={logo} width="1000" />
         </div>
 
         <div className='Login'>
@@ -32,15 +33,14 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
           ) : (
             <GoogleLogin
               clientId={GOOGLE_CLIENT_ID}
-              buttonText="Log in with Google"
+              buttonText="Login"
               onSuccess={this.props.handleLogin}
               onFailure={(err) => console.log(err)}
             />
           )}
         </div>
         
-        <style>{'body { background-color: #FFE7C2; }'}</style>
-        <h1>Icecreme brulee</h1>
+        <style>{'body { background-color: #FFF; }'}</style>
       </>
     )
   }
