@@ -73,6 +73,7 @@ router.post('/update', auth.ensureLoggedIn, (req, res) => {
     // }
     if (gameState.asker!==undefined && gameState.answerer!==undefined) {
       socketManager.getIo().emit("update", {askingPlayer:gameState.asker, answeringPlayer:gameState.answerer});
+      console.log(gameState)
       console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
     }
   }
