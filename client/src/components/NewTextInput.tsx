@@ -86,7 +86,7 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     }
     askQuestion = (questionText:string) => {
         const questionBody = {answerer: this.props.answerer, questionText: questionText};
-        this.setState({hasAskedQuestion:true});
+        // this.setState({hasAskedQuestion:true});
         post("/api/question", questionBody);
     }
     render() {

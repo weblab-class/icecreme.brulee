@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "./auth";
-import { removePlayer } from "./logic";
+import { gameState, setNextTurn } from "./logic";
 import socketManager from "./server-socket";
 const router = express.Router();
 
@@ -42,9 +42,40 @@ router.post("/removeSocket", (req, res) => {
 
 
 router.post("/question", auth.ensureLoggedIn, (req, res) => {
-  socket.getSocketFromUserID(req.body.answerer._id).emit("question", req.body.questionText);
+  //TODO: implement socket.on for question
   if (req.user) {
-    console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
+    const socket = socketManager.getSocketFromUserID(req.body.answerer._id);
+    if (socket !== undefined) {
+      socket.emit("question", {questionText:req.body.questionText, gameState:gameState});
+      console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
+    }
+  }
+})
+
+router.post('/choose', auth.ensureLoggedIn, (req, res) => {
+  //TODO: implement socket.on for choose
+  if (req.user) {
+    const socket = socketManager.getSocketFromUserID(req.body.chosenPlayer._id);
+    if (socket !== undefined) {
+      socket.emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:gameState});
+      console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
+    }
+  }
+})
+
+router.post('/update', auth.ensureLoggedIn, (req, res) => {
+  if (req.user) {
+    setNextTurn();
+    // const askingPlayerSocket = socketManager.getSocketFromUserID(String(gameState.asker._id));
+    // const answeringPlayerSocket = socketManager.getSocketFromUserID(String(gameState.answerer._id));
+    // if (askingPlayerSocket !== undefined && answeringPlayerSocket !== undefined) {
+    //   askingPlayerSocket.emit("update", {})
+    // }
+    if (gameState.asker!==undefined && gameState.answerer!==undefined) {
+      socketManager.getIo().emit("update", {askingPlayer:gameState.asker, answeringPlayer:gameState.answerer});
+      console.log(gameState)
+      console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
+    }
   }
 })
 
