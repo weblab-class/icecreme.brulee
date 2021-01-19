@@ -56,7 +56,7 @@ class App extends Component<{}, State> {
     get("/api/whoami")
       .then((user: User) => {
         if (user._id) {
-          // TRhey are registed in the database and currently logged in.
+          // They are registed in the database and currently logged in.
           const currentPlayer: Player = {
             name:user.name,
             _id:user._id

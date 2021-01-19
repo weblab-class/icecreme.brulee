@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 import "./Skeleton.css";
-import logo from "../../public/logo.svg";
+//import logo from "../../public/logo.svg";
 //TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 
@@ -19,7 +19,7 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
     return (
       <>
         <div className='Logo'>
-          <img src={logo} width="1000" />
+          <a className = 'Logo' href="https://imgur.com/MRIeTqc"><img className = 'Logo' src="https://i.imgur.com/MRIeTqc.jpg" title="source: imgur.com" /></a>
         </div>
 
         <div className='Login'>

@@ -6,7 +6,7 @@ class NotFound extends Component<RouteComponentProps> {
   render() {
     return (
       <div>
-        <h1>The page you are looking for is in another castle!</h1>
+        <h1>icecreme.brulee cannot find the page you are looking for :(</h1>
       </div>
     )
   }
