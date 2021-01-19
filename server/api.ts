@@ -43,7 +43,9 @@ router.post("/removeSocket", (req, res) => {
 
 router.post("/question", auth.ensureLoggedIn, (req, res) => {
   socket.getSocketFromUserID(req.body.answerer._id).emit("question", req.body.questionText);
-  console.log(`asked question ${req.body.questionText} to ${req.body.answerer.name}`);
+  if (req.user) {
+    console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
+  }
 })
 
 // anything else falls to this "not found" case
