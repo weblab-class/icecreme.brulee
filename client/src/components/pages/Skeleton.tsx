@@ -4,7 +4,6 @@ import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLo
 import "./Skeleton.css";
 //TODO(weblab student): REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
-const logo = require('./icecreme_logo.jpg');
 
 type Props = {
   userId: String;
@@ -18,24 +17,30 @@ class Skeleton extends Component<Props & RouteComponentProps, State> {
   render() {
     return (
       <>
-        <img src={logo} />
+        <div className='Logo'>
+          <img src={'logo.jpg'} />
+        </div>
 
-        {this.props.userId ? (
-          <GoogleLogout
-            clientId={GOOGLE_CLIENT_ID}
-            buttonText="Logout"
-            onLogoutSuccess={this.props.handleLogout}
-            onFailure={() => console.log(`Failed to logout.`)}
-          />
-        ) : (
-          <GoogleLogin
-            clientId={GOOGLE_CLIENT_ID}
-            buttonText="Log in with Google"
-            onSuccess={this.props.handleLogin}
-            onFailure={(err) => console.log(err)}
-          />
-        )}
+        <div className='Login'>
+          {this.props.userId ? (
+            <GoogleLogout
+              clientId={GOOGLE_CLIENT_ID}
+              buttonText="Logout"
+              onLogoutSuccess={this.props.handleLogout}
+              onFailure={() => console.log(`Failed to logout.`)}
+            />
+          ) : (
+            <GoogleLogin
+              clientId={GOOGLE_CLIENT_ID}
+              buttonText="Log in with Google"
+              onSuccess={this.props.handleLogin}
+              onFailure={(err) => console.log(err)}
+            />
+          )}
+        </div>
+        
         <style>{'body { background-color: #FFE7C2; }'}</style>
+        <h1>Icecreme brulee</h1>
       </>
     )
   }
