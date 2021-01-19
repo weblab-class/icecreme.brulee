@@ -101,6 +101,7 @@ class App extends Component<{}, State> {
         //TODO: implement me
         console.log(`${data.gameState.answerer.name} chose you!`)
         this.setState({isChosenPlayer:true});
+        post("/api/update", {})
       })
 
       socket.on("update", (data) => {
