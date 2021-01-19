@@ -45,7 +45,7 @@ export const getRPSWinner = (chooser: rps, choice: rps) => {
 //not sure if this is written correctly
 export const addPlayer = (name:String, id:String) => {
     const newPlayer: Player = {name: name, _id:id};
-    console.log(`New player ${newPlayer.name}`)
+    console.log(`New player ${newPlayer.name}`);
     gameState.playerList = gameState.playerList.concat(newPlayer);
     gameState.idToPlayerMap.set(String(id), newPlayer);
 }
@@ -56,7 +56,7 @@ export const removePlayer = (id:String) => {
   };
 
 //set asker and answerer given the turn; update turn
-const setNextTurn = () => {
+export const setNextTurn = () => {
     gameState.turn = gameState.turn + 1
     if (gameState.turn === gameState.playerList.length) {
         gameState.asker = gameState.playerList[gameState.turn-1]
@@ -73,7 +73,7 @@ const setNextTurn = () => {
     }
 }
 
-const setChosenPlayer = (chosenPlayer: Player) => {
+export const setChosenPlayer = (chosenPlayer: Player) => {
     gameState.chosen = chosenPlayer
 }
 
@@ -82,4 +82,6 @@ export default {
     getRPSWinner,
     addPlayer,
     removePlayer,
+    setNextTurn,
+    setChosenPlayer,
   };

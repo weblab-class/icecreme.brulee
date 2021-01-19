@@ -19,6 +19,9 @@ type State = {
   currentPlayer: Player;
   activePlayers: Player[];
   loggedIn: boolean;
+  isAskingPlayer: boolean;
+  isAnsweringPlayer: boolean;
+  isChosenPlayer: boolean;
 };
 
 class App extends Component<{}, State> {
@@ -32,6 +35,9 @@ class App extends Component<{}, State> {
       },
       activePlayers: [],
       loggedIn: false,
+      isAskingPlayer: false,
+      isAnsweringPlayer: false,
+      isChosenPlayer: false,
     };
   }
 
@@ -74,6 +80,18 @@ class App extends Component<{}, State> {
           activePlayers: playerList,
         });
       });
+
+      socket.on("question", (data) => {
+        //TODO: implement me 
+        console.log(`${data.gameState.asker.name} asks: ${data.questionText}`);
+        this.setState({isAnsweringPlayer:true});
+      });
+
+      socket.on("choose", (data) => {
+        //TODO: implement me
+        console.log(`${data.gameState.answerer.name} chose you!`)
+        this.setState({isChosenPlayer:true});
+      })
   }
 
   handleLogin = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
@@ -118,7 +136,7 @@ class App extends Component<{}, State> {
         </Router>
         <PlayerList playerList={this.state.activePlayers}/>
         <NewQuestionInput isAskingPlayer={this.state.loggedIn && true} answerer={this.state.currentPlayer}/>
-        <PlayerButtonList playerList={this.state.activePlayers}/>
+        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && true} playerList={this.state.activePlayers}/>
       </>
     );
   }
