@@ -9,6 +9,7 @@ import User from "../../../shared/User";
 //import {Player} from "./Player";
 import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
+import NewQuestionInput from "./NewTextInput";
 import "../utilities.css";
 
 
@@ -83,7 +84,7 @@ class App extends Component<{}, State> {
           name:res.profileObj.name,
           _id:user._id
         };
-        this.setState({ userId: user._id, currentPlayer: currentPlayer});
+        this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
         post("/api/initsocket", { socketid: socket.id });
       });
     }
@@ -115,6 +116,7 @@ class App extends Component<{}, State> {
           <NotFound default={true} />
         </Router>
         <PlayerList playerList={this.state.activePlayers}/>
+        <NewQuestionInput isAskingPlayer={this.state.loggedIn && true} answerer={this.state.currentPlayer}/>
       </>
     );
   }

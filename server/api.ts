@@ -1,5 +1,6 @@
 import express from "express";
 import auth from "./auth";
+import { removePlayer } from "./logic";
 import socketManager from "./server-socket";
 const router = express.Router();
 
@@ -38,6 +39,12 @@ router.post("/removeSocket", (req, res) => {
   }
   res.send({});
 });
+
+
+router.post("/question", auth.ensureLoggedIn, (req, res) => {
+  socket.getSocketFromUserID(req.body.answerer._id).emit("question", req.body.questionText);
+  console.log(`asked question ${req.body.questionText} to ${req.body.answerer.name}`);
+})
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
