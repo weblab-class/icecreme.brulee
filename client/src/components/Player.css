@@ -5,3 +5,16 @@
     border-radius: 50%;
     display: inline-block;
   }
+
+  .circle {
+    width: 100px;
+    height: 100px;
+    background: pink;
+    border-radius: 50%;
+    margin: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12;
+  }
