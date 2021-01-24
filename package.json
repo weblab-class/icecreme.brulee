@@ -17,7 +17,7 @@
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.14",
     "url-loader": "^4.1.1",
-    "webpack": "^5.13.0",
+    "webpack": "^5.17.0",
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.1"
   },
@@ -39,6 +39,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-google-login": "^5.2.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3",
     "socket.io": "^3.0.5",
     "socket.io-client": "^3.0.5",
     "ts-node": "^9.1.1",

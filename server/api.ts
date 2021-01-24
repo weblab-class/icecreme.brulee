@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "./auth";
-import { gameState, setNextTurn } from "./logic";
+import { gameState, getRPSWinner, setNextTurn } from "./logic";
 import socketManager from "./server-socket";
 const router = express.Router();
 
@@ -76,6 +76,25 @@ router.post('/update', auth.ensureLoggedIn, (req, res) => {
       console.log(gameState)
       console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
     }
+  }
+})
+
+router.post('/rps', auth.ensureLoggedIn, (req, res) => {
+  console.log(req.body.rpsChoice)
+  if (req.user){
+    if (gameState.answerer?._id === req.user._id && gameState.answererRPS === undefined){
+      gameState.answererRPS = req.body.rpsChoice;
+    }
+    //if gameState.chosen instead of gameState.asker
+    if (gameState.asker?._id === req.user._id && gameState.chosenRPS === undefined){
+      gameState.chosenRPS = req.body.rpsChoice;
+    }
+  }
+  if (gameState.answererRPS && gameState.chosenRPS) {
+    const winner = getRPSWinner(gameState.answererRPS, gameState.chosenRPS)
+    socketManager.getIo().emit("rpsupdate", {gameState, winner})
+    console.log(gameState)
+    console.log(`Between answerer ${gameState.answerer?.name!} and choice ${gameState.chosen?.name!}, ${winner.name} won!`);
   }
 })
 

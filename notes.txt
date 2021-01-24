@@ -13,6 +13,8 @@ interface User {
 
 handleChange = (event. React.)
 
+
+
 src/typings/custom/index.d.ts
 
 declare module '*.png' { // eslint-disable-next-line @typescript-eslint/no-explicit-any const value: any; export default value; }

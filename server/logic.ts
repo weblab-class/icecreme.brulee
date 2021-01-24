@@ -9,9 +9,11 @@ interface gameState {
     idToPlayerMap: Map<string, Player>;
     turn: number;
     state?: "rps" | "question";
-    asker?: Player;
-    answerer?: Player;
-    chosen?: Player;
+    asker?: Player | undefined;
+    answerer?: Player | undefined;
+    chosen?: Player | undefined;
+    answererRPS?: rps | undefined;
+    chosenRPS?: rps | undefined;
 }
 
 type rps = "rock" | "paper" | "scissors";
@@ -23,10 +25,10 @@ export const gameState: gameState = {
 }
 
 //given the chooser rps and the choice rps, returns the winner
-export const getRPSWinner = (chooser: rps, choice: rps) => {
+export const getRPSWinner = (chooser: rps, choice: rps): Player => {
     //two player objects: need to standardize how we do this part first
     const player1 = gameState.playerList[gameState.turn]
-    const player2 = gameState.chosen
+    const player2 = gameState.chosen!
 
     //if there's a tie, we need to reroll
     if ( (chooser === "rock" && choice === "scissors") ||
@@ -39,8 +41,10 @@ export const getRPSWinner = (chooser: rps, choice: rps) => {
             return player2
         } else {
             //TODO: reroll / play RPS again
-        }
+            //if tie, question gets revealed
+            return player2
     }
+}
 
 //not sure if this is written correctly
 export const addPlayer = (name:String, id:String) => {
