@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "./auth";
-import { gameState, setNextTurn } from "./logic";
+import { gameState, getRPSWinner, setNextTurn, getFermiWinner } from "./logic";
 import socketManager from "./server-socket";
 const router = express.Router();
 
@@ -76,6 +76,45 @@ router.post('/update', auth.ensureLoggedIn, (req, res) => {
       console.log(gameState)
       console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
     }
+  }
+})
+
+router.post('/rps', auth.ensureLoggedIn, (req, res) => {
+  console.log(req.body.rpsChoice)
+  if (req.user){
+    if (gameState.answerer?._id === req.user._id && gameState.answererRPS === undefined){
+      gameState.answererRPS = req.body.rpsChoice;
+    }
+    //if gameState.chosen instead of gameState.asker
+    if (gameState.asker?._id === req.user._id && gameState.chosenRPS === undefined){
+      gameState.chosenRPS = req.body.rpsChoice;
+    }
+  }
+  if (gameState.answererRPS && gameState.chosenRPS) {
+    const winner = getRPSWinner(gameState.answererRPS, gameState.chosenRPS)
+    socketManager.getIo().emit("rpsupdate", {gameState, winner})
+    console.log(gameState)
+    console.log(`Between answerer ${gameState.answerer?.name} and choice ${gameState.chosen?.name}, ${winner.name} won!`);
+  }
+})
+
+router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
+  console.log(req.body.fermiAns)
+  if (req.user){
+    if (gameState.answerer?._id === req.user._id && gameState.answererRPS === undefined){
+      gameState.answererFermi = req.body.fermiAns;
+    }
+    //if gameState.chosen instead of gameState.asker
+    if (gameState.asker?._id === req.user._id && gameState.chosenRPS === undefined){
+      gameState.chosenFermi = req.body.fermiAns;
+    }
+  }
+  if (gameState.answererFermi && gameState.chosenFermi) {
+    //TODO: get the Fermi answer and question
+    const winner = getFermiWinner(gameState.answererFermi, gameState.chosenFermi, 0)
+    socketManager.getIo().emit("fermiupdate", {gameState, winner})
+    console.log(gameState)
+    console.log(`Between answerer ${gameState.answerer?.name!} and choice ${gameState.chosen?.name!}, ${winner.name} won!`);
   }
 })
 

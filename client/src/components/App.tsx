@@ -6,20 +6,30 @@ import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
+import Fermi from "../../../shared/Fermi";
 //import {Player} from "./Player";
 import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
 import NewQuestionInput from "./NewTextInput";
 import "../utilities.css";
 import PlayerButtonList from "./PlayerButtonList";
-
+import RockPaperScissors from "./RockPaperScissors";
+import Game from "./pages/Game";
+import e from "express";
+import FermiBlock from "./FermiBlock";
+import { navigate } from "@reach/router";
+//import RockPaperScissorss from "./RockPaperScissors";
+//import '../semantic-ui-css/semantic.min.css';
 
 type State = {
   userId: String;
   currentPlayer: Player;
+
   answeringPlayer: Player;
+
   activePlayers: Player[];
   loggedIn: boolean;
+
   gameStarted: boolean;
   isAskingPlayer: boolean;
   isAnsweringPlayer: boolean;
@@ -28,6 +38,8 @@ type State = {
   hasChosenPlayer: boolean;
   questionText: string;
   chooseText: string;
+  questionReveal: boolean;
+
 };
 
 class App extends Component<{}, State> {
@@ -53,6 +65,7 @@ class App extends Component<{}, State> {
       hasChosenPlayer: false,
       questionText:"",
       chooseText:"",
+      questionReveal: false,
     };
   }
 
@@ -109,13 +122,26 @@ class App extends Component<{}, State> {
         //TODO: implement me
         console.log(`${data.gameState.answerer.name} chose you!`)
         this.setState({isChosenPlayer:true, chooseText:`${data.gameState.answerer.name} chose you!`});
-        post("/api/update", {})
+        //post("/api/update", {})
+        post("/api/startRPS", )
       })
 
       socket.on("update", (data) => {
         //TODO: implement me
         this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
+        // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
         console.log(this.state.isAskingPlayer)
+      })
+
+      //todo for rps
+      socket.on("rpsupdate", (data) => {
+        if (data.winner === data.gameState.answerer) {
+          this.setState({questionReveal: false})
+          console.log(`Question will not be revealed.`)
+        } else if (data.winner === data.gameState.chosen) {
+          this.setState({questionReveal: true})
+          console.log(`Revealed question is ${this.state.questionText}`)
+        }
       })
   }
 
@@ -129,7 +155,9 @@ class App extends Component<{}, State> {
           _id:user._id
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
-        post("/api/initsocket", { socketid: socket.id });
+        post("/api/initsocket", { socketid: socket.id }).then(() => {
+          navigate("/game")
+        })
       });
     }
   };
@@ -154,21 +182,38 @@ class App extends Component<{}, State> {
     // All the pages need to have the props defined in RouteComponentProps for @reach/router to work properly. Please use the Skeleton as an example.
     return (
       <>
+      {/* <RockPaperScissors /> */}
         <Router>
           <Skeleton
             path="/"
             handleLogin={this.handleLogin}
             handleLogout={this.handleLogout}
-            userId={this.state.userId}
+            userId={this.state.userId} 
           />
+
+            {/* <Game
+            path ='/game'
+            userId = {this.state.userId}
+            handleLogin = {this.handleLogin}
+            handleLogout = {this.handleLogout}
+            /> */}
+
           <NotFound default={true} />
         </Router>
+
         <PlayerList playerList={this.state.activePlayers}/>
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
+
         {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> Start game</button>):null}
-        <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/>
-        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer}/>
+        {/* <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/> */}
+        {/* <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer}/> */}
+
+        {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
+        {/* for testing below */}
+        <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} />
+        {/* <FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer}/> */}
+
       </>
     );
   }
