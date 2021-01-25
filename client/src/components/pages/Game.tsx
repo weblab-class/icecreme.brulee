@@ -4,6 +4,8 @@ import "./Game.css";
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
+import { navigate } from "@reach/router";
+
 
 type Props = {
   userId: String;

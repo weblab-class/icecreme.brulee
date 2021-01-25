@@ -18,6 +18,7 @@ import Game from "./pages/Game";
 import e from "express";
 import FermiBlock from "./FermiBlock";
 import { navigate } from "@reach/router";
+import Setup from "./pages/Setup";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -172,12 +173,17 @@ class App extends Component<{}, State> {
     post("/api/update", {});
   }
 
+  gotoSetup = () => {
+    navigate("/setup")
+  }
+
   render() {
     // NOTE:
     // All the pages need to have the props defined in RouteComponentProps for @reach/router to work properly. Please use the Skeleton as an example.
     return (
       <>
       {/* <RockPaperScissors /> */}
+      <button onClick = {this.gotoSetup}>Setup</button>
         <Router>
           <Skeleton
             path="/"
@@ -186,12 +192,16 @@ class App extends Component<{}, State> {
             userId={this.state.userId} 
           />
 
-            {/* <Game
+          <Setup 
+          path = "/setup"
+          />
+
+            <Game
             path ='/game'
             userId = {this.state.userId}
             handleLogin = {this.handleLogin}
             handleLogout = {this.handleLogout}
-            /> */}
+            />
 
           <NotFound default={true} />
         </Router>
@@ -206,9 +216,9 @@ class App extends Component<{}, State> {
 
         {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
         {/* for testing below */}
-        <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} />
+        {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
         {/* <FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer}/> */}
-
+        
       </>
     );
   }
