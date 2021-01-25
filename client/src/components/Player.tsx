@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../utilities.css";
 import Player from "../../../shared/Player";
+import './Player.css';
 
 
 // export interface Player {
@@ -17,7 +18,7 @@ class PlayerBlock extends Component<Props> {
     }
     render() {
         return (
-            <div className = "Name">
+            <div className = "circle" >
                 {this.props.player.name}
             </div>
         )

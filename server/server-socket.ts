@@ -36,6 +36,7 @@ export const removeUser = (user: User, socket: Socket): void => {
   io.emit("activeUsers", { activeUsers: getAllConnectedUsers() });
 };
 
+
 export const init = (server: http.Server): void => {
   io = new Server(server);
   io.on("connection", (socket) => {
