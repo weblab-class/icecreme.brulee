@@ -35,6 +35,8 @@ type State = {
   isAskingPlayer: boolean;
   isAnsweringPlayer: boolean;
   isChosenPlayer: boolean;
+  hasAskedQuestion: boolean;
+  hasChosenPlayer: boolean;
   questionText: string;
   chooseText: string;
   questionReveal: boolean;
@@ -60,6 +62,8 @@ class App extends Component<{}, State> {
       isAskingPlayer: false,
       isAnsweringPlayer: false,
       isChosenPlayer: false,
+      hasAskedQuestion: false,
+      hasChosenPlayer: false,
       questionText:"",
       chooseText:"",
       questionReveal: false,
@@ -125,7 +129,8 @@ class App extends Component<{}, State> {
 
       socket.on("update", (data) => {
         //TODO: implement me
-        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
+        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
+        // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
         console.log(this.state.isAskingPlayer)
       })
 
@@ -212,7 +217,7 @@ class App extends Component<{}, State> {
 
         {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> Start game</button>):null}
         {/* <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/> */}
-        {/* <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers}/> */}
+        {/* <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer}/> */}
 
         {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
         {/* for testing below */}

@@ -23,8 +23,6 @@ class Game extends Component<Props & RouteComponentProps, State> {
     render() {
       return (
         <>
-          <h1> HELLO </h1>
-
         <div className='Login'>
         {this.props.userId ? (
           <GoogleLogout

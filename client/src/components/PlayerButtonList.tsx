@@ -10,12 +10,14 @@ import User from "../../../shared/User";
 import PlayerBlock from "./Player";
 import Player from "../../../shared/Player";
 import "../utilities.css";
+import "./PlayerButtonList.css"
 
 
 
 interface Props {
     playerList: Player[];
     isAnsweringPlayer: boolean;
+    hasChosenPlayer: boolean;
     // code: String; TODO: implement multiple rooms, not sure where
 }
 interface State {
@@ -41,34 +43,36 @@ class PlayerButtonList extends Component<Props, State>
         if (this.props.isAnsweringPlayer && !this.state.hasChosenPlayer) {
         return (
             <>
-                {this.state.chosenPlayer._id.length === 0 ? <h3>Choose a player...</h3>:<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>}
-                {this.props.playerList.map((player, i) => (
-                    <>
-                        <button 
-                            type='button'
-                            onClick = {() => {
-                                this.setState({chosenPlayer:player, hasChosenPlayer: true});
-                                post("/api/choose", {chosenPlayer:player});
-                            }}
-                            disabled={this.state.hasChosenPlayer}
-                        >   
-                        </button>
-                        <PlayerBlock
-                            player={player}
-                            key={i}
-                        />
-                    </>
-                )
-                )
-                }
-                {/* <button type='reset' onClick={this.resetPlayer}>
-                    Reset player
-                </button> */}
+                <div className="Button">
+                    {this.state.chosenPlayer._id.length === 0 ? <h3>Choose a player...</h3>:<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>}
+                    {this.props.playerList.map((player, i) => (
+                        <>
+                            <button 
+                                type='button'
+                                onClick = {() => {
+                                    // this.setState({chosenPlayer:player, hasChosenPlayer: true});
+                                    post("/api/choose", {chosenPlayer:player});
+                                }}
+                                disabled={this.state.hasChosenPlayer}
+                            >   
+                            </button>
+                            <PlayerBlock
+                                player={player}
+                                key={i}
+                            />
+                        </>
+                    )
+                    )
+                    }
+                    {/* <button type='reset' onClick={this.resetPlayer}>
+                        Reset player
+                    </button> */}
+                </div>
             </>
         )}
-        else if (this.state.hasChosenPlayer) {
-            return this.state.chosenPlayer._id.length === 0 ? (<h3>Choose a player...</h3>):(<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>);
-        }
+        // else if (this.state.hasChosenPlayer && !this.props.isAnsweringPlayer) {
+        //     return this.state.chosenPlayer._id.length === 0 ? (<h3>Choose a player...</h3>):(<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>);
+        // }
         return null;
     }
 }

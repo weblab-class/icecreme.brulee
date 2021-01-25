@@ -9,6 +9,7 @@ import User from "../../../shared/User";
 import "../utilities.css";
 import Player from "../../../shared/Player";
 import PlayerBlock from "./Player";
+import "./NewTextInput.css";
 
 // Based on NewPostInput from Catbook
 
@@ -46,7 +47,7 @@ class NewTextInput extends Component<NewTextInputProps, NewTextInputState>{
 
     render() {
         return (
-            <div>
+            <div className="input_text">
                 <input
                     type="text"
                     placeholder={this.props.defaultText}
@@ -90,7 +91,8 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
         post("/api/question", questionBody);
     }
     render() {
-        return (this.props.isAskingPlayer && !(this.state.hasAskedQuestion)) ? (<NewTextInput defaultText={`Ask a question to ${this.props.answerer.name}`} onSubmit={this.askQuestion}/>): null;
+        return (
+            this.props.isAskingPlayer && !(this.state.hasAskedQuestion)) ? (<NewTextInput defaultText={`Ask a question to ${this.props.answerer.name}`} onSubmit={this.askQuestion}/>): null;
     }
 }
 

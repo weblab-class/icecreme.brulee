@@ -21,7 +21,7 @@ class Login extends Component<Props & RouteComponentProps, State> {
     return (
       <>
         <div className='Logo'>
-          <a className = 'Logo' href="https://imgur.com/MRIeTqc"><img className = 'Logo' src="https://i.imgur.com/MRIeTqc.jpg" title="source: imgur.com" width="1000"/></a>
+          <a className = 'Logo'><img className = 'Logo' src="https://i.imgur.com/MRIeTqc.jpg" title="source: imgur.com" width="1000"/></a>
         </div>
 
         <div className='Login'>

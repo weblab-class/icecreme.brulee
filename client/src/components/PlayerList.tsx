@@ -10,6 +10,7 @@ import User from "../../../shared/User";
 import PlayerBlock from "./Player";
 import Player from "../../../shared/Player";
 import "../utilities.css";
+import "./PlayerList.css"
 
 
 
@@ -26,15 +27,17 @@ class PlayerList extends Component<Props>
 
     render() {
         return (
-            <>
-                <h3>Current Players</h3>
-                {this.props.playerList.map((player, i) => (
-                    <PlayerBlock
-                        player={player}
-                        key={i}
-                    />
-                )
-                )}
+            <>  
+                <div className="Players">
+                    <h3>Current Players</h3>
+                    {this.props.playerList.map((player, i) => (
+                        <PlayerBlock
+                            player={player}
+                            key={i}
+                        />
+                    )
+                    )}
+                </div>
             </>
         )
     }
