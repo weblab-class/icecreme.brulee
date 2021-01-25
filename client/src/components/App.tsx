@@ -24,6 +24,8 @@ type State = {
   isAskingPlayer: boolean;
   isAnsweringPlayer: boolean;
   isChosenPlayer: boolean;
+  hasAskedQuestion: boolean;
+  hasChosenPlayer: boolean;
   questionText: string;
   chooseText: string;
 };
@@ -47,6 +49,8 @@ class App extends Component<{}, State> {
       isAskingPlayer: false,
       isAnsweringPlayer: false,
       isChosenPlayer: false,
+      hasAskedQuestion: false,
+      hasChosenPlayer: false,
       questionText:"",
       chooseText:"",
     };
@@ -110,7 +114,7 @@ class App extends Component<{}, State> {
 
       socket.on("update", (data) => {
         //TODO: implement me
-        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:''});
+        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
         console.log(this.state.isAskingPlayer)
       })
   }
@@ -164,7 +168,7 @@ class App extends Component<{}, State> {
         <h2>{this.state.chooseText}</h2>
         {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> Start game</button>):null}
         <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/>
-        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers}/>
+        <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer}/>
       </>
     );
   }

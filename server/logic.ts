@@ -44,10 +44,12 @@ export const getRPSWinner = (chooser: rps, choice: rps) => {
 
 //not sure if this is written correctly
 export const addPlayer = (name:String, id:String) => {
-    const newPlayer: Player = {name: name, _id:id};
-    console.log(`New player ${newPlayer.name}`);
-    gameState.playerList = gameState.playerList.concat(newPlayer);
-    gameState.idToPlayerMap.set(String(id), newPlayer);
+    if (!gameState.idToPlayerMap.has(String(id))) {
+        const newPlayer: Player = {name: name, _id:id};
+        console.log(`New player ${newPlayer.name}`);
+        gameState.playerList = gameState.playerList.concat(newPlayer);
+        gameState.idToPlayerMap.set(String(id), newPlayer);
+    }
 }
 
 export const removePlayer = (id:String) => {
