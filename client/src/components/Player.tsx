@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../utilities.css";
 import Player from "../../../shared/Player";
 
+
 // export interface Player {
 //     _id: String;
 //     name: String;
@@ -16,7 +17,7 @@ class PlayerBlock extends Component<Props> {
     }
     render() {
         return (
-            <div>
+            <div className = "Name">
                 {this.props.player.name}
             </div>
         )
