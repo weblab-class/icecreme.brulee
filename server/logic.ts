@@ -14,6 +14,8 @@ interface gameState {
     chosen?: Player | undefined;
     answererRPS?: rps | undefined;
     chosenRPS?: rps | undefined;
+    answererFermi?: number | undefined;
+    chosenFermi?: number | undefined;
 }
 
 type rps = "rock" | "paper" | "scissors";
@@ -43,6 +45,24 @@ export const getRPSWinner = (chooser: rps, choice: rps): Player => {
             //TODO: reroll / play RPS again
             //if tie, question gets revealed
             return player2
+    }
+}
+
+export const getFermiWinner = (chooser: number, choice: number, answer: number): Player => {
+    //two player objects: need to standardize how we do this part first
+    const player1 = gameState.playerList[gameState.turn]
+    const player2 = gameState.chosen!
+
+    //if there's a tie, we need to reroll
+    const player1Diff = Math.abs(chooser - answer)
+    const player2Diff = Math.abs(choice - answer)
+    if ( player1Diff < player2Diff) {
+        return player1
+    } else if ( player2Diff < player1Diff) {
+        return player2
+    } else {
+        //ties go to choice for now
+        return player2
     }
 }
 
@@ -88,4 +108,5 @@ export default {
     removePlayer,
     setNextTurn,
     setChosenPlayer,
+    getFermiWinner,
   };

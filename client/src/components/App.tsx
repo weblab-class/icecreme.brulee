@@ -6,6 +6,7 @@ import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
+import Fermi from "../../../shared/Fermi";
 //import {Player} from "./Player";
 import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
@@ -15,6 +16,8 @@ import PlayerButtonList from "./PlayerButtonList";
 import RockPaperScissors from "./RockPaperScissors";
 import Game from "./pages/Game";
 import e from "express";
+import FermiBlock from "./FermiBlock";
+import { navigate } from "@reach/router";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -34,6 +37,7 @@ type State = {
   questionText: string;
   chooseText: string;
   questionReveal: boolean;
+
 };
 
 class App extends Component<{}, State> {
@@ -114,7 +118,8 @@ class App extends Component<{}, State> {
         //TODO: implement me
         console.log(`${data.gameState.answerer.name} chose you!`)
         this.setState({isChosenPlayer:true, chooseText:`${data.gameState.answerer.name} chose you!`});
-        post("/api/update", {})
+        //post("/api/update", {})
+        post("/api/startRPS", )
       })
 
       socket.on("update", (data) => {
@@ -145,7 +150,9 @@ class App extends Component<{}, State> {
           _id:user._id
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
-        post("/api/initsocket", { socketid: socket.id });
+        post("/api/initsocket", { socketid: socket.id }).then(() => {
+          navigate("/game")
+        })
       });
     }
   };
@@ -179,9 +186,12 @@ class App extends Component<{}, State> {
             userId={this.state.userId} 
           />
 
-          {/* <Game
-          path = '/game'
-          /> */}
+            {/* <Game
+            path ='/game'
+            userId = {this.state.userId}
+            handleLogin = {this.handleLogin}
+            handleLogout = {this.handleLogout}
+            /> */}
 
           <NotFound default={true} />
         </Router>
@@ -197,6 +207,7 @@ class App extends Component<{}, State> {
         {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
         {/* for testing below */}
         <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} />
+        {/* <FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer}/> */}
 
       </>
     );

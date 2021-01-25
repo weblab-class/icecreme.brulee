@@ -37,6 +37,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
     "react": "^17.0.1",
+    "react-bootstrap-range-slider": "^2.0.2",
     "react-dom": "^17.0.1",
     "react-google-login": "^5.2.2",
     "semantic-ui-css": "^2.4.1",
