@@ -17,6 +17,9 @@ import "./PlayerButtonList.css"
 interface Props {
     playerList: Player[];
     isAnsweringPlayer: boolean;
+    hasChosenPlayer: boolean;
+    userId: String;
+    disableButtonList: () => void;
     // code: String; TODO: implement multiple rooms, not sure where
 }
 interface State {
@@ -43,13 +46,15 @@ class PlayerButtonList extends Component<Props, State>
         return (
             <>
                 <div className="Button">
-                    {this.state.chosenPlayer._id.length === 0 ? <h3>Choose a player...</h3>:<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>}
-                    {this.props.playerList.map((player, i) => (
+                    <h3>Choose a player...</h3>
+                    {/* {this.state.chosenPlayer._id.length === 0 ? <h3>Choose a player...</h3>:<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>} */}
+                    {this.props.playerList.filter((player) => player._id !== this.props.userId).map((player, i) => (
                         <>
                             <button 
                                 type='button'
                                 onClick = {() => {
-                                    this.setState({chosenPlayer:player, hasChosenPlayer: true});
+                                    // this.setState({chosenPlayer:player, hasChosenPlayer: true});
+                                    this.props.disableButtonList();
                                     post("/api/choose", {chosenPlayer:player});
                                 }}
                                 disabled={this.state.hasChosenPlayer}
@@ -69,9 +74,9 @@ class PlayerButtonList extends Component<Props, State>
                 </div>
             </>
         )}
-        else if (this.state.hasChosenPlayer) {
-            return this.state.chosenPlayer._id.length === 0 ? (<h3>Choose a player...</h3>):(<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>);
-        }
+        // else if (this.state.hasChosenPlayer && !this.props.isAnsweringPlayer) {
+        //     return this.state.chosenPlayer._id.length === 0 ? (<h3>Choose a player...</h3>):(<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>);
+        // }
         return null;
     }
 }

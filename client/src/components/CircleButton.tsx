@@ -16,6 +16,7 @@ interface Props {
     color?: "facebook" | "google plus" | "instagram" | "linkedin" | "twitter" | "vk" | "youtube" | "red" | "orange" | "yellow" | "olive" | "green" | "teal" | "blue" | "violet" | "purple" | "pink" | "brown" | "grey" | "black";
     icon?: SemanticICONS;
     size?: SemanticSIZES;
+    disableRPS: () => void;
     //onClick?: function;
 }
 
@@ -26,7 +27,8 @@ class CircleButton extends Component<Props> {
 
     handleClick = () => {
         const rps = {rpsChoice: this.props.text};
-        post('/api/rps', rps)
+        this.props.disableRPS();
+        post('/api/rps', rps);
     }
 
     render() {
