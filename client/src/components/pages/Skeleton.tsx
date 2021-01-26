@@ -5,6 +5,7 @@ import "../../utilities.css";
 import "./Skeleton.css";
 import Login from "./Login";
 import Game from "./Game";
+import Setup from "./Setup"
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 
 type Props = {
@@ -24,7 +25,7 @@ class Skeleton extends Component<Props & RouteComponentProps> {
   }
 
   render() {
-    return <>{this.props.userId ? <Game userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}/> : <Login userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}
+    return <>{this.props.userId ? <Setup userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}/> : <Login userId={this.props.userId} handleLogin={this.props.handleLogin} handleLogout={this.props.handleLogout}
     />}</>;
   }
 }

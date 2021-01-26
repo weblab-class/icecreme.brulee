@@ -20,6 +20,7 @@ import FermiBlock from "./FermiBlock";
 import { navigate } from "@reach/router";
 import Login from "./pages/Login";
 import Setup from "./pages/Setup";
+import Info from "./pages/Info";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -165,7 +166,7 @@ class App extends Component<{}, State> {
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
         post("/api/initsocket", { socketid: socket.id }).then(() => {
-          navigate("/game");
+          navigate("/setup");
         })
       });
     }
@@ -198,7 +199,7 @@ class App extends Component<{}, State> {
     return (
       <>
       {/* <RockPaperScissors /> */}
-      <button onClick = {this.gotoSetup}>Setup</button>
+      {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
           {/* <Skeleton
             path="/"
@@ -215,6 +216,9 @@ class App extends Component<{}, State> {
 
           <Setup 
           path = "/setup"
+          userId = {this.state.userId}
+          handleLogin = {this.handleLogin}
+          handleLogout = {this.handleLogout}
           />
 
             <Game
@@ -223,6 +227,11 @@ class App extends Component<{}, State> {
             handleLogin = {this.handleLogin}
             handleLogout = {this.handleLogout}
             gameCode = {this.state.gameCode}
+            />
+          
+          <Info
+            path = "/info"
+            player = {this.state.currentPlayer}
             />
 
           <NotFound default={true} />
