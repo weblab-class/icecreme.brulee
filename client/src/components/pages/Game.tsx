@@ -150,7 +150,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       }
       else if (data.gameState.answerer._id === this.state.userId) {
         console.log(`You chose ${data.gameState.chosen.name}!`);
-        this.setState({isRPSPlayer:true, chooseText:`You chose ${data.gameState.chosen.name}`});
+        this.setState({isRPSPlayer:true, chooseText:`You chose ${data.gameState.chosen.name}!`});
       }
       else {
         console.log(`${data.gameState.answerer.name} chose ${data.gameState.chosen.name}!`);
@@ -171,10 +171,10 @@ class Game extends Component<Props & RouteComponentProps, State> {
     socket.on("rpsupdate", (data) => {
       console.log(`rpsupdate, winner ${data.winner.name}`)
       if (data.winner._id === data.gameState.answerer._id) {
-        this.setState({questionReveal: false})
+        this.setState({questionReveal: false, questionText:`${data.winner.name} won, so the question will not be revealed.`});
         console.log(`Question will not be revealed.`)
       } else if (data.winner._id === data.gameState.chosen._id) {
-        this.setState({questionReveal: true})
+        this.setState({questionReveal: true, questionText: `${data.winner.name} won! The question was "${data.gameState.currentQuestion}"`})
         console.log(`Revealed question is ${data.gameState.currentQuestion}`)
       }
       this.setState({gameStarted: false, buttonText:'Next round'});
@@ -212,7 +212,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
-        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> {this.state.buttonText}</button>):null}
+        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 && this.state.loggedIn}> {this.state.buttonText}</button>):null}
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
