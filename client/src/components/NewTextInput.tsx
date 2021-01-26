@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router } from "@reach/router";
+import { navigate, Router } from "@reach/router";
 import { get, post } from "../utilities";
 import NotFound from "./pages/NotFound";
 import Skeleton from "./pages/Skeleton";
@@ -99,16 +99,19 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
 }
 
 interface NewCodeInputProps {
-    setCode: (string) => void;
+    setCode: (code:string) => void;
 }
 
 class NewCodeInput extends Component<NewCodeInputProps, {}> {
     constructor(props) {
         super(props);
     }
+    moveToGame = (code:string) => {
+        this.props.setCode(code);
+    }
     render() {
         return (
-            <NewTextInput defaultText='Enter code' onSubmit={this.props.setCode}/>
+            <NewTextInput defaultText='Enter code' onSubmit={this.moveToGame}/>
         )
     }
 }

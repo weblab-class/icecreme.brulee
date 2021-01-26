@@ -32,7 +32,8 @@ class Setup extends Component<Props & RouteComponentProps, State> {
       this.setState({color: color.hex})
   }
   handleSubmit = () => {
-
+    // temporary!!!
+    navigate("/join")
   }
 
   

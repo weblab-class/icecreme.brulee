@@ -21,6 +21,7 @@ import { navigate } from "@reach/router";
 import Login from "./pages/Login";
 import Setup from "./pages/Setup";
 import Info from "./pages/Info";
+import Join from "./pages/Join";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -76,7 +77,9 @@ class App extends Component<{}, State> {
   }
 
   setGameCode = (code: string) => {
+    console.log(code);
     this.setState({gameCode: code});
+    navigate("/game");
   }
 
   componentDidMount() {
@@ -234,6 +237,10 @@ class App extends Component<{}, State> {
             player = {this.state.currentPlayer}
             />
 
+          <Join
+            path = "/join"
+            setCode = {this.setGameCode}
+          />
           <NotFound default={true} />
         </Router>
 
