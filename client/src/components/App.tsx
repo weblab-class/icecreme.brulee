@@ -19,6 +19,7 @@ import e from "express";
 import FermiBlock from "./FermiBlock";
 import { navigate } from "@reach/router";
 import Login from "./pages/Login";
+import Setup from "./pages/Setup";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -180,12 +181,17 @@ class App extends Component<{}, State> {
     post("/api/update", {});
   }
 
+  gotoSetup = () => {
+    navigate("/setup")
+  }
+
   render() {
     // NOTE:
     // All the pages need to have the props defined in RouteComponentProps for @reach/router to work properly. Please use the Skeleton as an example.
     return (
       <>
       {/* <RockPaperScissors /> */}
+      <button onClick = {this.gotoSetup}>Setup</button>
         <Router>
           {/* <Skeleton
             path="/"
@@ -198,6 +204,10 @@ class App extends Component<{}, State> {
             handleLogin={this.handleLogin}
             handleLogout={this.handleLogout}
             userId={this.state.userId}
+          />
+
+          <Setup 
+          path = "/setup"
           />
 
             <Game
@@ -222,7 +232,7 @@ class App extends Component<{}, State> {
         {/* for testing below */}
         {/* <RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer} /> */}
         {/* <FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isAskingPlayer} isAnsweringPlayer = {this.state.loggedIn && this.state.isAnsweringPlayer}/> */}
-
+        
       </>
     );
   }
