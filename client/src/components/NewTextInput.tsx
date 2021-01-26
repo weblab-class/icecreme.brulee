@@ -98,4 +98,19 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     }
 }
 
-export default NewQuestionInput;
+interface NewCodeInputProps {
+    setCode: (string) => void;
+}
+
+class NewCodeInput extends Component<NewCodeInputProps, {}> {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <NewTextInput defaultText='Enter code' onSubmit={this.props.setCode}/>
+        )
+    }
+}
+
+export {NewQuestionInput, NewCodeInput};

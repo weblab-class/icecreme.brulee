@@ -10,7 +10,7 @@ import Fermi from "../../../shared/Fermi";
 //import {Player} from "./Player";
 import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
-import NewQuestionInput from "./NewTextInput";
+import {NewQuestionInput} from "./NewTextInput";
 import "../utilities.css";
 import PlayerButtonList from "./PlayerButtonList";
 import RockPaperScissors from "./RockPaperScissors";
@@ -42,6 +42,8 @@ type State = {
   chooseText: string;
   questionReveal: boolean;
 
+  gameCode: string;
+
 };
 
 class App extends Component<{}, State> {
@@ -68,7 +70,12 @@ class App extends Component<{}, State> {
       questionText:"",
       chooseText:"",
       questionReveal: false,
+      gameCode:"",
     };
+  }
+
+  setGameCode = (code: string) => {
+    this.setState({gameCode: code});
   }
 
   componentDidMount() {
@@ -215,6 +222,7 @@ class App extends Component<{}, State> {
             userId = {this.state.userId}
             handleLogin = {this.handleLogin}
             handleLogout = {this.handleLogout}
+            gameCode = {this.state.gameCode}
             />
 
           <NotFound default={true} />

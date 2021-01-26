@@ -27,6 +27,8 @@ export const gameState: gameState = {
     turn: 0,
 }
 
+const codeToGameState: Map<string, gameState> = new Map<string, gameState>();
+
 //given the chooser rps and the choice rps, returns the winner
 export const getRPSWinner = (chooser: rps, choice: rps): Player | undefined => {
     //two player objects: need to standardize how we do this part first

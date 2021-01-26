@@ -7,7 +7,7 @@ import PlayerList from '../PlayerList';
 import Player from "../../../../shared/Player";
 import { get, post } from '../../utilities';
 import RockPaperScissors from '../RockPaperScissors';
-import NewQuestionInput from '../NewTextInput';
+import {NewQuestionInput} from '../NewTextInput';
 import PlayerButtonList from '../PlayerButtonList';
 import User from "../../../../shared/User";
 import { socket } from '../../client-socket';
@@ -19,6 +19,7 @@ type Props = {
   userId: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
+  gameCode?: string;
 }
 type State = {
   userId: String;
@@ -112,7 +113,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         playerList.push(newPlayer)
       }
       this.setState({
-        activePlayers: playerList,
+        activePlayers: data.activePlayers,
       });
     })
     
@@ -123,7 +124,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         playerList.push(newPlayer)
       }
       this.setState({
-        activePlayers: playerList,
+        activePlayers: data.activePlayers,
       });
       // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
       //   post("/api/update", {});
@@ -212,7 +213,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
-        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 && this.state.loggedIn}> {this.state.buttonText}</button>):null}
+        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</button>):null}
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 

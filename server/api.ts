@@ -29,7 +29,7 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 
 router.get("/activeUsers", (req, res) => {
-  res.send({ activeUsers: socket.getAllConnectedUsers() });
+  res.send({ activeUsers: socket.getAllConnectedUsers() , activePlayers: gameState.playerList});
 });
 
 router.post("/removeSocket", (req, res) => {
