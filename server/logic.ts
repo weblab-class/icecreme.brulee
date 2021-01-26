@@ -16,6 +16,7 @@ interface gameState {
     chosenRPS?: rps | undefined;
     answererFermi?: number | undefined;
     chosenFermi?: number | undefined;
+    currentQuestion?: String 
 }
 
 type rps = "rock" | "paper" | "scissors";
@@ -27,10 +28,10 @@ export const gameState: gameState = {
 }
 
 //given the chooser rps and the choice rps, returns the winner
-export const getRPSWinner = (chooser: rps, choice: rps): Player => {
+export const getRPSWinner = (chooser: rps, choice: rps): Player | undefined => {
     //two player objects: need to standardize how we do this part first
-    const player1 = gameState.playerList[gameState.turn]
-    const player2 = gameState.chosen!
+    const player1 = gameState.answerer;
+    const player2 = gameState.chosen;
 
     //if there's a tie, we need to reroll
     if ( (chooser === "rock" && choice === "scissors") ||
@@ -48,10 +49,10 @@ export const getRPSWinner = (chooser: rps, choice: rps): Player => {
     }
 }
 
-export const getFermiWinner = (chooser: number, choice: number, answer: number): Player => {
+export const getFermiWinner = (chooser: number, choice: number, answer: number): Player | undefined => {
     //two player objects: need to standardize how we do this part first
-    const player1 = gameState.playerList[gameState.turn]
-    const player2 = gameState.chosen!
+    const player1 = gameState.answerer;
+    const player2 = gameState.chosen;
 
     //if there's a tie, we need to reroll
     const player1Diff = Math.abs(chooser - answer)
@@ -83,7 +84,10 @@ export const removePlayer = (id:String) => {
 
 //set asker and answerer given the turn; update turn
 export const setNextTurn = () => {
-    gameState.turn = gameState.turn + 1
+    gameState.turn = gameState.turn + 1;
+    gameState.chosen = undefined;
+    gameState.answererRPS = undefined;
+    gameState.chosenRPS = undefined;
     if (gameState.turn === gameState.playerList.length) {
         gameState.asker = gameState.playerList[gameState.turn-1]
         gameState.answerer = gameState.playerList[0]
@@ -103,6 +107,14 @@ export const setChosenPlayer = (chosenPlayer: Player) => {
     gameState.chosen = chosenPlayer
 }
 
+export const setCurrentQuestion = (question: String) => {
+    gameState.currentQuestion = question;
+}
+
+export const getCurrentQuestion = (): String|undefined => {
+    return gameState.currentQuestion;
+}
+
 export default {
     gameState,
     getRPSWinner,
@@ -111,4 +123,6 @@ export default {
     setNextTurn,
     setChosenPlayer,
     getFermiWinner,
+    setCurrentQuestion,
+    getCurrentQuestion
   };

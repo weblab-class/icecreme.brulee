@@ -72,6 +72,7 @@ interface NewQuestionInputProps {
     //code :
     isAskingPlayer: boolean;
     answerer: Player;
+    disableQuestionSubmit: () => void;
 }
 
 interface NewQuestionInputState {
@@ -88,6 +89,7 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     askQuestion = (questionText:string) => {
         const questionBody = {answerer: this.props.answerer, questionText: questionText};
         // this.setState({hasAskedQuestion:true});
+        this.props.disableQuestionSubmit();
         post("/api/question", questionBody);
     }
     render() {

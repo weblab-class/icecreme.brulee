@@ -11,8 +11,9 @@ import { post } from "../utilities";
 
 
 interface Props {
-    isAnsweringPlayer: boolean;
+    isRPSPlayer: boolean;
     isChosenPlayer: boolean;
+    disableRPS: () => void;
 }
 
 interface State {
@@ -35,11 +36,11 @@ class RockPaperScissors extends Component<Props, State> {
         return (
             <div className = "RPS-container">
                 <h2>rock, paper, scissors</h2> 
-                {(this.props.isAnsweringPlayer || this.props.isChosenPlayer) ? (<>
+                {(this.props.isRPSPlayer || this.props.isChosenPlayer) ? (<>
                 
-                <CircleButton color = "teal" text = "rock" icon = "hand rock"></CircleButton>
-                <CircleButton color = "teal" text = "paper" icon = "hand paper"></CircleButton>
-                <CircleButton color = "teal" text = "scissors" icon = "hand scissors"></CircleButton>
+                <CircleButton color = "teal" text = "rock" icon = "hand rock" disableRPS={this.props.disableRPS}></CircleButton>
+                <CircleButton color = "teal" text = "paper" icon = "hand paper" disableRPS={this.props.disableRPS}></CircleButton>
+                <CircleButton color = "teal" text = "scissors" icon = "hand scissors" disableRPS={this.props.disableRPS}></CircleButton>
                 </>): ""}
             </div>
         )
