@@ -41,6 +41,7 @@ type State = {
   chooseText: string;
   buttonText: string;
   questionReveal: boolean;
+  codeText: string;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
@@ -69,6 +70,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       chooseText:"",
       buttonText:"Start game",
       questionReveal: false,
+      codeText: "Room code: " + this.props.gameCode,
     };
   }
 
@@ -102,7 +104,9 @@ class Game extends Component<Props & RouteComponentProps, State> {
       })
       .then(() =>
         socket.on("connect", () => {
-          post("/api/initsocket", { socketid: socket.id , gameCode:this.props.gameCode});
+          post("/api/initsocket", { socketid: socket.id , gameCode:this.props.gameCode}).then(()=>{
+            // this.setState({codeText: "Room code: " + this.props.gameCode});
+          });
         })
       )
       
@@ -214,6 +218,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         )}
         </div>
         <PlayerList playerList={this.state.activePlayers}/>
+        <h1>{this.state.codeText}</h1>
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
