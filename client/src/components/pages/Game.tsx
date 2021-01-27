@@ -99,7 +99,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
             name:user.name,
             _id:user._id
           };
-          this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn: true});
+          this.setState({ userId: user._id, loggedIn: true});
         }
       })
       .then(() =>
@@ -116,10 +116,19 @@ class Game extends Component<Props & RouteComponentProps, State> {
         const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id, color: data.activeUsers[i].color}
         playerList.push(newPlayer)
       }
+      let playerName = this.state.currentPlayer.name;
+      for (let i = 0; i < data.activePlayers.length; i++) {
+        if (this.state.userId === data.activePlayers[i]._id){
+          playerName = data.activePlayers[i].name;
+        }
+      }
+      console.log(`New name ${playerName}`);
+      const current: Player = {name: playerName, _id: this.state.userId};
       this.setState({
         activePlayers: data.activePlayers.filter((player) => {
           return player.gameCode === this.props.gameCode
         }),
+        currentPlayer: current
       });
     })
     
@@ -129,10 +138,19 @@ class Game extends Component<Props & RouteComponentProps, State> {
         const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id, color: (data.activeUsers[i].color || undefined)}
         playerList.push(newPlayer)
       }
+      let playerName = this.state.currentPlayer.name;
+      for (let i = 0; i < data.activePlayers.length; i++) {
+        if (this.state.currentPlayer._id === data.activePlayers[i]._id){
+          playerName = data.activePlayers[i].name;
+        }
+      }
+      console.log(`New name ${playerName}`);
+      const current: Player = {name: playerName, _id: this.state.userId};
       this.setState({
         activePlayers: data.activePlayers.filter((player) => {
           return player.gameCode === this.props.gameCode
         }),
+        currentPlayer: current
       });
       // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
       //   post("/api/update", {});
@@ -229,7 +247,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
         {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
-        <Chat userId={this.props.userId} gameCode={this.props.gameCode}/>
+        <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
           </>
       )
       }

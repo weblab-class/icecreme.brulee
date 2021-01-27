@@ -254,13 +254,13 @@ router.get("/chat", (req, res) => {
 
 router.post("/message", auth.ensureLoggedIn, (req, res) => {
   if (req.user) {
-    console.log(`Received a chat message from ${req.user.name}: ${req.body.content}`);
+    console.log(`Received a chat message from ${req.body.name}: ${req.body.content}`);
 
   // insert this message into the database
   const message = new Message({
     sender: {
       _id: req.user._id,
-      name: req.user.name,
+      name: req.body.name,
     },
     content: req.body.content,
     gameCode: req.body.gameCode,

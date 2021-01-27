@@ -118,11 +118,12 @@ class NewCodeInput extends Component<NewCodeInputProps, {}> {
 
 interface NewMessageProps {
     gameCode: string;
+    name: String;
   }
   
 class NewMessage extends Component<NewMessageProps> {
     sendMessage = (value: string) => {
-      const body = { content: value , gameCode: this.props.gameCode};
+      const body = { content: value , gameCode: this.props.gameCode, name:this.props.name};
       post("/api/message", body);
     };
   

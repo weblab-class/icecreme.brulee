@@ -19,6 +19,7 @@ export interface ChatData {
 interface Props {
   gameCode: string;
   userId: String;
+  name: String;
 }
 
 interface State {
@@ -63,7 +64,7 @@ class Chat extends Component<Props, State> {
           ))}
         </div>
         <div className="Chat-newContainer">
-          <NewMessage gameCode={this.props.gameCode} />
+          <NewMessage gameCode={this.props.gameCode} name={this.props.name}/>
         </div>
       </div>
     );
