@@ -41,6 +41,7 @@ type State = {
   chooseText: string;
   buttonText: string;
   questionReveal: boolean;
+  codeText: string;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
@@ -69,6 +70,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       chooseText:"",
       buttonText:"Start game",
       questionReveal: false,
+      codeText: "Room code: " + this.props.gameCode,
     };
   }
 
@@ -102,7 +104,9 @@ class Game extends Component<Props & RouteComponentProps, State> {
       })
       .then(() =>
         socket.on("connect", () => {
-          post("/api/initsocket", { socketid: socket.id });
+          post("/api/initsocket", { socketid: socket.id , gameCode:this.props.gameCode}).then(()=>{
+            // this.setState({codeText: "Room code: " + this.props.gameCode});
+          });
         })
       )
       
@@ -113,7 +117,9 @@ class Game extends Component<Props & RouteComponentProps, State> {
         playerList.push(newPlayer)
       }
       this.setState({
-        activePlayers: data.activePlayers,
+        activePlayers: data.activePlayers.filter((player) => {
+          return player.gameCode === this.props.gameCode
+        }),
       });
     })
     
@@ -124,7 +130,9 @@ class Game extends Component<Props & RouteComponentProps, State> {
         playerList.push(newPlayer)
       }
       this.setState({
-        activePlayers: data.activePlayers,
+        activePlayers: data.activePlayers.filter((player) => {
+          return player.gameCode === this.props.gameCode
+        }),
       });
       // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
       //   post("/api/update", {});
@@ -188,7 +196,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
   }
 
   startGame= () => {
-    post("/api/update", {});
+    post("/api/update", {gameCode:this.props.gameCode});
   }
 
     render() {
@@ -212,6 +220,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         )}
         </div>
         <PlayerList playerList={this.state.activePlayers}/>
+        <h1>{this.state.codeText}</h1>
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
@@ -219,7 +228,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
-        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS}/>):null}
+        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
           
           </>
       )

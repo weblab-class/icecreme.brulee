@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Router } from "@reach/router";
 import { get, post } from "../utilities";
 import NotFound from "./pages/NotFound";
-import Skeleton from "./pages/Skeleton";
+// import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
@@ -77,9 +77,12 @@ class App extends Component<{}, State> {
   }
 
   setGameCode = (code: string) => {
-    console.log(code);
     this.setState({gameCode: code});
     navigate("/game");
+    post("/api/newgame", {gameCode:code}).then((value)=>{
+      console.log('redirecting...')
+      // post("/api/initsocket", { socketid: socket.id , gameCode:code});
+    });
   }
 
   componentDidMount() {
@@ -205,7 +208,7 @@ class App extends Component<{}, State> {
       {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
           {/* <Skeleton
-            path="/"
+            path="/skeleton"
             handleLogin={this.handleLogin}
             handleLogout={this.handleLogout}
             userId={this.state.userId} 
@@ -219,6 +222,8 @@ class App extends Component<{}, State> {
 
           <Setup 
           path = "/setup"
+          player = {this.state.currentPlayer}
+
           userId = {this.state.userId}
           currentName = {this.state.currentPlayer.name}
           handleLogin = {this.handleLogin}

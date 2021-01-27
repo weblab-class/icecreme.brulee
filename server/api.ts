@@ -2,8 +2,8 @@ import express from "express";
 //import PlayerBlock from "../client/src/components/Player";
 import Player from "../shared/Player";
 import auth from "./auth";
-import { gameState, getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion } from "./logic";
-import socketManager from "./server-socket";
+import { gameState, getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers} from "./logic";
+import socketManager, { addUser, getAllConnectedUsers } from "./server-socket";
 const router = express.Router();
 
 const socket = require("./server-socket");
@@ -21,7 +21,10 @@ router.post("/initsocket", (req, res) => {
   // do nothing if user not logged in
   if (req.user) {
     const socket = socketManager.getSocketFromSocketID(req.body.socketid);
-    if (socket !== undefined) socketManager.addUser(req.user, socket);
+    if (socket !== undefined && req.body.gameCode === undefined) {socketManager.addUser(req.user, socket, '');}
+    else if (socket !== undefined && req.body.gameCode) {
+      socketManager.addUser(req.user, socket, req.body.gameCode);
+    }
   }
   res.send({});
 });
@@ -31,13 +34,13 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 
 router.get("/activeUsers", (req, res) => {
-  res.send({ activeUsers: socket.getAllConnectedUsers() , activePlayers: gameState.playerList});
+  res.send({ activeUsers: socket.getAllConnectedUsers() , activePlayers: getAllPlayers(), codeToGameState:codeToGameState});
 });
 
 router.post("/removeSocket", (req, res) => {
   if (req.user) {
     const socket = socketManager.getSocketFromSocketID(req.body.socketid);
-    if (socket !== undefined) socketManager.removeUser(req.user, socket);
+    if (socket !== undefined) {socketManager.removeUser(req.user, socket, req.body.gameCode);}
   }
   res.send({});
 });
@@ -72,10 +75,24 @@ router.post("/question", auth.ensureLoggedIn, (req, res) => {
     //   setCurrentQuestion(req.body.questionText);
     //   console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
     // }
-    setCurrentQuestion(req.body.questionText);
-    socketManager.getIo().emit("question", {questionText:req.body.questionText, gameState:gameState});
-    console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
-    res.send({});
+    if (req.body.answerer.gameCode) {
+      const currentGameState = codeToGameState.get(req.body.answerer.gameCode);
+      if (currentGameState) {
+        setCurrentQuestion(req.body.questionText, req.body.answerer.gameCode);
+        for (let i = 0; i < currentGameState.playerList.length; i++) {
+          let playerSocket = socketManager.getSocketFromUserID(String(currentGameState.playerList[i]._id));
+          if (playerSocket !== undefined) {
+            playerSocket.emit("question", {questionText:req.body.questionText, gameState:currentGameState});
+          }
+        }
+        console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
+        res.send({});
+      }
+    }
+    // setCurrentQuestion(req.body.questionText);
+    // socketManager.getIo().emit("question", {questionText:req.body.questionText, gameState:gameState});
+    // console.log(`${req.user.name} asked question "${req.body.questionText}" to ${req.body.answerer.name}`);
+    // res.send({});
   }
 })
 
@@ -88,31 +105,63 @@ router.post('/choose', auth.ensureLoggedIn, (req, res) => {
     //   socket.emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:gameState});
     //   console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
     // }
-    setChosenPlayer(req.body.chosenPlayer);
-    socketManager.getIo().emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:gameState});
-    console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
-    res.send({});
+    if (req.body.chosenPlayer.gameCode) {
+      const currentGameState = codeToGameState.get(req.body.chosenPlayer.gameCode)
+      if (currentGameState) {
+        setChosenPlayer(req.body.chosenPlayer, req.body.chosenPlayer.gameCode);
+        for (let i = 0; i < currentGameState.playerList.length; i++) {
+          let playerSocket = socketManager.getSocketFromUserID(String(currentGameState.playerList[i]._id));
+          if (playerSocket !== undefined) {
+            playerSocket.emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:currentGameState});
+          }
+        }
+        console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
+        res.send({});
+      }
+    }
+    // setChosenPlayer(req.body.chosenPlayer);
+    // socketManager.getIo().emit("choose", {chosenPlayer:req.body.chosenPlayer, gameState:gameState});
+    // console.log(`${req.user.name} chose ${req.body.chosenPlayer.name}`);
+    // res.send({});
   }
 })
 
 router.post('/update', auth.ensureLoggedIn, (req, res) => {
   if (req.user) {
-    setNextTurn();
+    setNextTurn(req.body.gameCode);
     // const askingPlayerSocket = socketManager.getSocketFromUserID(String(gameState.asker._id));
     // const answeringPlayerSocket = socketManager.getSocketFromUserID(String(gameState.answerer._id));
     // if (askingPlayerSocket !== undefined && answeringPlayerSocket !== undefined) {
     //   askingPlayerSocket.emit("update", {})
     // }
-    if (gameState.asker!==undefined && gameState.answerer!==undefined) {
-      socketManager.getIo().emit("update", {askingPlayer:gameState.asker, answeringPlayer:gameState.answerer});
-      console.log(gameState)
-      console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
-      res.send({});
+    if (codeToGameState.get(req.body.gameCode)) {
+      const currentGameState = codeToGameState.get(req.body.gameCode);
+      if (currentGameState && currentGameState.asker!==undefined && currentGameState.answerer!==undefined) {
+        for (let i = 0; i < currentGameState.playerList.length; i++) {
+          let playerSocket = socketManager.getSocketFromUserID(String(currentGameState.playerList[i]._id));
+          if (playerSocket !== undefined) {
+            playerSocket.emit("update", {askingPlayer:currentGameState.asker, answeringPlayer:currentGameState.answerer});
+          }
+        }
+        console.log(currentGameState)
+        console.log(`${currentGameState.asker.name} is asking ${currentGameState.answerer.name}...`);
+        res.send({});
+      }
     }
+    // if (gameState.asker!==undefined && gameState.answerer!==undefined) {
+    //   socketManager.getIo().emit("update", {askingPlayer:gameState.asker, answeringPlayer:gameState.answerer});
+    //   console.log(gameState)
+    //   console.log(`${gameState.asker.name} is asking ${gameState.answerer.name}...`);
+    //   res.send({});
+    // }
   }
 })
 
 router.post('/rps', auth.ensureLoggedIn, (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode);
+  if (gameState === undefined) {
+    return;
+  }
   console.log(req.body.rpsChoice)
   if (req.user){
     if (gameState.answerer && gameState.chosen && gameState.answerer._id === req.user._id && gameState.answererRPS === undefined){
@@ -127,11 +176,17 @@ router.post('/rps', auth.ensureLoggedIn, (req, res) => {
       console.log(gameState)
     }
     if (gameState.answererRPS && gameState.chosenRPS && gameState.chosen && gameState.answerer) {
-      const winner = getRPSWinner(gameState.answererRPS, gameState.chosenRPS)
+      const winner = getRPSWinner(gameState.answererRPS, gameState.chosenRPS, req.body.gameCode);
       // console.log(gameState)
       if (winner) {
         console.log(`Between answerer ${gameState.answerer.name} and choice ${gameState.chosen.name}, ${winner.name} won!`);
-        socketManager.getIo().emit("rpsupdate", {gameState:gameState, winner:winner});
+        for (let i = 0; i < gameState.playerList.length; i++) {
+          let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+          if (playerSocket !== undefined) {
+            playerSocket.emit("rpsupdate", {gameState:gameState, winner:winner});
+          }
+        }
+        // socketManager.getIo().emit("rpsupdate", {gameState:gameState, winner:winner});
       }
     }
     res.send({});
@@ -158,6 +213,16 @@ router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
       console.log(`Between answerer ${gameState.answerer?.name!} and choice ${gameState.chosen?.name!}, ${winner.name} won!`);
     }
   }
+})
+
+router.post('/newgame', auth.ensureLoggedIn, (req, res) => {
+  if (req.user) {
+    addNewGame(req.body.gameCode);
+    addPlayer(req.user.name, req.user._id, req.body.gameCode);
+    console.log(codeToGameState);
+    socketManager.getIo().emit("activeUsers", {activeUsers: getAllConnectedUsers() , activePlayers:getAllPlayers(), gameCode:req.body.gameCode});
+  }
+  res.send({});
 })
 
 // anything else falls to this "not found" case

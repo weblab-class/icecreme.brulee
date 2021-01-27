@@ -9,7 +9,7 @@ import { TwitterPicker, PhotoshopPicker } from 'react-color';
 import { Button, Input, Grid} from 'semantic-ui-react'
 import { post } from '../../utilities';
 import { navigate } from "@reach/router";
-import Player from "../../../../shared/Player";
+import Player from '../../../../shared/Player';
 
 
 
@@ -18,6 +18,7 @@ type Props = {
   currentName?: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
+  player: Player;
 }
 
 type State = {
@@ -44,7 +45,12 @@ class Setup extends Component<Props & RouteComponentProps, State> {
       const updatedPlayer: Player = {name: newName, _id: this.props.userId, color: this.state.color}
       console.log("new player attributes: " + updatedPlayer)
       post('/api/playerUpdate', updatedPlayer)
-      navigate('/game')
+      //navigate('/game')
+
+      //const player = {name: this.state.name, color: this.state.color}
+      console.log("new player attributes: " + updatedPlayer)
+      // post('/api/playerUpdate', player)
+      navigate("/join")
   }
   
   goToInfo = () => {
@@ -68,11 +74,13 @@ class Setup extends Component<Props & RouteComponentProps, State> {
           <input placeholder='Name' className = "center setupInput" onChange = {this.nameChange}></input>
                     <div className = "newCircle center" style={{background:this.state.color}}>{this.state.name}</div>
                     <TwitterPicker  className = "center" color={ this.state.color }
-                        onChangeComplete={ this.onChangeColor}
-                        //onSwatchHover = {this.onChangeColor}
+                        //onChangeComplete={ this.onChangeColor}
+                        onSwatchHover = {this.onChangeColor}
                     ></TwitterPicker>
 
-                <button className = "center setupButton" onClick = {this.handleSubmit}>Submit</button>
+                <Button onClick = {this.handleSubmit}>Submit</Button>
+                <Button onClick = {this.goToInfo}>Game Info</Button>
+
         {/* I think below are old code */}
       {/* <div>
           <Input placeholder='Name' />
@@ -80,9 +88,7 @@ class Setup extends Component<Props & RouteComponentProps, State> {
           <TwitterPicker color={ this.state.color }
             onChangeComplete={ this.onChangeColor}
             onSwatchHover = {this.onChangeColor}></TwitterPicker>
-
             <Button onClick = {this.handleSubmit}>Submit</Button>
-
             <Button onClick = {this.goToInfo}>Game Info</Button>
       </div> */}
     </div>
