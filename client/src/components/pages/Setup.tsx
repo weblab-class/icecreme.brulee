@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { RouteComponentProps } from "@reach/router";
+import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
 import "./Setup.css";
 import { IroColorPicker } from '@jaames/iro/dist/ColorPicker';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
@@ -7,11 +8,16 @@ const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.go
 import { TwitterPicker, PhotoshopPicker } from 'react-color';
 import { Button, Input, Grid} from 'semantic-ui-react'
 import { post } from '../../utilities';
+import { navigate } from "@reach/router";
 
 
 
 type Props = {
+  userId: String;
+  handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
+  handleLogout: () => void;
 }
+
 type State = {
   color: string;
   name: string;
@@ -24,6 +30,7 @@ class Setup extends Component<Props & RouteComponentProps, State> {
         name: "",
     }
   }
+
   onChangeColor = (color, event) => {
       console.log(color.hex)
       this.setState({color: color.hex})
@@ -32,6 +39,10 @@ class Setup extends Component<Props & RouteComponentProps, State> {
       const player = {name: this.state.name, color: this.state.color}
       console.log("new player attributes: " + player)
       post('/api/playerUpdate', player)
+  }
+  
+  goToInfo = () => {
+    navigate("/info")
   }
 
   nameChange = (event) => {
@@ -56,8 +67,19 @@ class Setup extends Component<Props & RouteComponentProps, State> {
                     ></TwitterPicker>
 
                 <button className = "center setupButton" onClick = {this.handleSubmit}>Submit</button>
+        {/* I think below are old code */}
+      {/* <div>
+          <Input placeholder='Name' />
+          <div className = "newCircle" style={{background:this.state.color}}>Hello</div>
+          <TwitterPicker color={ this.state.color }
+            onChangeComplete={ this.onChangeColor}
+            onSwatchHover = {this.onChangeColor}></TwitterPicker>
 
-      </div>
+            <Button onClick = {this.handleSubmit}>Submit</Button>
+
+            <Button onClick = {this.goToInfo}>Game Info</Button>
+      </div> */}
+    </div>
     )
   }
 }

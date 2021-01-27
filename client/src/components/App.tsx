@@ -10,7 +10,7 @@ import Fermi from "../../../shared/Fermi";
 //import {Player} from "./Player";
 import Player from "../../../shared/Player";
 import PlayerList from "./PlayerList";
-import NewQuestionInput from "./NewTextInput";
+import {NewQuestionInput} from "./NewTextInput";
 import "../utilities.css";
 import PlayerButtonList from "./PlayerButtonList";
 import RockPaperScissors from "./RockPaperScissors";
@@ -18,7 +18,10 @@ import Game from "./pages/Game";
 import e from "express";
 import FermiBlock from "./FermiBlock";
 import { navigate } from "@reach/router";
+import Login from "./pages/Login";
 import Setup from "./pages/Setup";
+import Info from "./pages/Info";
+import Join from "./pages/Join";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -40,6 +43,8 @@ type State = {
   questionText: string;
   chooseText: string;
   questionReveal: boolean;
+
+  gameCode: string;
 
 };
 
@@ -67,83 +72,90 @@ class App extends Component<{}, State> {
       questionText:"",
       chooseText:"",
       questionReveal: false,
+      gameCode:"",
     };
   }
 
+  setGameCode = (code: string) => {
+    console.log(code);
+    this.setState({gameCode: code});
+    navigate("/game");
+  }
+
   componentDidMount() {
-    get("/api/whoami")
-      .then((user: User) => {
-        if (user._id) {
-          // They are registed in the database and currently logged in.
-          const currentPlayer: Player = {
-            name:user.name,
-            _id:user._id
-          };
-          this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn: true});
-        }
-      })
-      .then(() =>
-        socket.on("connect", () => {
-          post("/api/initsocket", { socketid: socket.id });
-        })
-      )
+    // get("/api/whoami")
+    //   .then((user: User) => {
+    //     if (user._id) {
+    //       // They are registed in the database and currently logged in.
+    //       const currentPlayer: Player = {
+    //         name:user.name,
+    //         _id:user._id
+    //       };
+    //       this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn: true});
+    //     }
+    //   })
+    //   .then(() =>
+    //     socket.on("connect", () => {
+    //       post("/api/initsocket", { socketid: socket.id });
+    //     })
+    //   )
 
-      get("/api/activeUsers").then((data) => {
-        const playerList : Player[] = [];
-        for (let i = 0; i < data.activeUsers.length; i++) {
-          const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
-          playerList.push(newPlayer)
-        }
-        this.setState({
-          activePlayers: playerList,
-        });
-      })
+    //   get("/api/activeUsers").then((data) => {
+    //     const playerList : Player[] = [];
+    //     for (let i = 0; i < data.activeUsers.length; i++) {
+    //       const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+    //       playerList.push(newPlayer)
+    //     }
+    //     this.setState({
+    //       activePlayers: playerList,
+    //     });
+    //   })
       
-      socket.on("activeUsers", (data) => {
-        const playerList : Player[] = [];
-        for (let i = 0; i < data.activeUsers.length; i++) {
-          const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
-          playerList.push(newPlayer)
-        }
-        this.setState({
-          activePlayers: playerList,
-        });
-        // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
-        //   post("/api/update", {});
-        // }
-      });
+    //   socket.on("activeUsers", (data) => {
+    //     const playerList : Player[] = [];
+    //     for (let i = 0; i < data.activeUsers.length; i++) {
+    //       const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+    //       playerList.push(newPlayer)
+    //     }
+    //     this.setState({
+    //       activePlayers: playerList,
+    //     });
+    //     // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
+    //     //   post("/api/update", {});
+    //     // }
+    //   });
 
-      socket.on("question", (data) => {
-        //TODO: implement me 
-        console.log(`${data.gameState.asker.name} asks: ${data.questionText}`);
-        this.setState({isAnsweringPlayer:true, questionText:`${data.gameState.asker.name} asks: ${data.questionText}`, chooseText:''});
-      });
+    //   socket.on("question", (data) => {
+    //     //TODO: implement me 
+    //     console.log(`${data.gameState.asker.name} asks: ${data.questionText}`);
+    //     this.setState({isAnsweringPlayer:true, questionText:`${data.gameState.asker.name} asks: ${data.questionText}`, chooseText:''});
+    //   });
 
-      socket.on("choose", (data) => {
-        //TODO: implement me
-        console.log(`${data.gameState.answerer.name} chose you!`)
-        this.setState({isChosenPlayer:true, chooseText:`${data.gameState.answerer.name} chose you!`});
-        //post("/api/update", {})
-        post("/api/startRPS", )
-      })
+    //   socket.on("choose", (data) => {
+    //     //TODO: implement me
+    //     console.log(`${data.gameState.answerer.name} chose you!`)
+    //     this.setState({isChosenPlayer:true, chooseText:`${data.gameState.answerer.name} chose you!`});
+    //     post("/api/update", {})
+    //     // post("/api/startRPS", )
+    //   })
 
-      socket.on("update", (data) => {
-        //TODO: implement me
-        this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
-        // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
-        console.log(this.state.isAskingPlayer)
-      })
+    //   socket.on("update", (data) => {
+    //     //TODO: implement me
+    //     this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
+    //     // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
+    //     console.log(this.state.isAskingPlayer)
+    //   })
 
-      //todo for rps
-      socket.on("rpsupdate", (data) => {
-        if (data.winner === data.gameState.answerer) {
-          this.setState({questionReveal: false})
-          console.log(`Question will not be revealed.`)
-        } else if (data.winner === data.gameState.chosen) {
-          this.setState({questionReveal: true})
-          console.log(`Revealed question is ${this.state.questionText}`)
-        }
-      })
+    //   //todo for rps
+    //   socket.on("rpsupdate", (data) => {
+    //     if (data.winner === data.gameState.answerer) {
+    //       this.setState({questionReveal: false})
+    //       console.log(`Question will not be revealed.`)
+    //     } else if (data.winner === data.gameState.chosen) {
+    //       this.setState({questionReveal: true})
+    //       console.log(`Revealed question is ${this.state.questionText}`)
+    //     }
+    //   })
   }
 
   handleLogin = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
@@ -157,7 +169,7 @@ class App extends Component<{}, State> {
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
         post("/api/initsocket", { socketid: socket.id }).then(() => {
-          navigate("/game")
+          navigate("/setup");
         })
       });
     }
@@ -170,7 +182,9 @@ class App extends Component<{}, State> {
     };
     this.setState({ userId: undefined, currentPlayer: blankPlayer , loggedIn:false});
     post("/api/removeSocket", { socketid: socket.id }).then(()=>{
-      post("/api/logout");
+      post("/api/logout").then(()=>{
+        navigate("/");
+      });
     });
   };
 
@@ -188,17 +202,26 @@ class App extends Component<{}, State> {
     return (
       <>
       {/* <RockPaperScissors /> */}
-      <button onClick = {this.gotoSetup}>Setup</button>
+      {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
-          <Skeleton
+          {/* <Skeleton
             path="/"
             handleLogin={this.handleLogin}
             handleLogout={this.handleLogout}
             userId={this.state.userId} 
+          /> */}
+          <Login
+            path='/'
+            handleLogin={this.handleLogin}
+            handleLogout={this.handleLogout}
+            userId={this.state.userId}
           />
 
           <Setup 
           path = "/setup"
+          userId = {this.state.userId}
+          handleLogin = {this.handleLogin}
+          handleLogout = {this.handleLogout}
           />
 
             <Game
@@ -206,16 +229,26 @@ class App extends Component<{}, State> {
             userId = {this.state.userId}
             handleLogin = {this.handleLogin}
             handleLogout = {this.handleLogout}
+            gameCode = {this.state.gameCode}
+            />
+          
+          <Info
+            path = "/info"
+            player = {this.state.currentPlayer}
             />
 
+          <Join
+            path = "/join"
+            setCode = {this.setGameCode}
+          />
           <NotFound default={true} />
         </Router>
 
-        <PlayerList playerList={this.state.activePlayers}/>
+        {/* <PlayerList playerList={this.state.activePlayers}/>
         <h2>{this.state.questionText}</h2>
-        <h2>{this.state.chooseText}</h2>
+        <h2>{this.state.chooseText}</h2> */}
 
-        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> Start game</button>):null}
+        {/* {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1}> Start game</button>):null} */}
         {/* <NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer}/> */}
         {/* <PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer}/> */}
 

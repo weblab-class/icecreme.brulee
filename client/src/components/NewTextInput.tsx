@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router } from "@reach/router";
+import { navigate, Router } from "@reach/router";
 import { get, post } from "../utilities";
 import NotFound from "./pages/NotFound";
 import Skeleton from "./pages/Skeleton";
@@ -72,6 +72,7 @@ interface NewQuestionInputProps {
     //code :
     isAskingPlayer: boolean;
     answerer: Player;
+    disableQuestionSubmit: () => void;
 }
 
 interface NewQuestionInputState {
@@ -88,6 +89,7 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     askQuestion = (questionText:string) => {
         const questionBody = {answerer: this.props.answerer, questionText: questionText};
         // this.setState({hasAskedQuestion:true});
+        this.props.disableQuestionSubmit();
         post("/api/question", questionBody);
     }
     render() {
@@ -96,4 +98,22 @@ class NewQuestionInput extends Component<NewQuestionInputProps, NewQuestionInput
     }
 }
 
-export default NewQuestionInput;
+interface NewCodeInputProps {
+    setCode: (code:string) => void;
+}
+
+class NewCodeInput extends Component<NewCodeInputProps, {}> {
+    constructor(props) {
+        super(props);
+    }
+    moveToGame = (code:string) => {
+        this.props.setCode(code);
+    }
+    render() {
+        return (
+            <NewTextInput defaultText='Enter code' onSubmit={this.moveToGame}/>
+        )
+    }
+}
+
+export {NewQuestionInput, NewCodeInput};

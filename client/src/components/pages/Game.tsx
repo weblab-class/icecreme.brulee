@@ -3,6 +3,14 @@ import React, { Component } from 'react';
 import "./Game.css";
 import { RouteComponentProps } from "@reach/router";
 import GoogleLogin, {  GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from 'react-google-login';
+import PlayerList from '../PlayerList';
+import Player from "../../../../shared/Player";
+import { get, post } from '../../utilities';
+import RockPaperScissors from '../RockPaperScissors';
+import {NewQuestionInput} from '../NewTextInput';
+import PlayerButtonList from '../PlayerButtonList';
+import User from "../../../../shared/User";
+import { socket } from '../../client-socket';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 import { navigate } from "@reach/router";
 
@@ -11,15 +19,176 @@ type Props = {
   userId: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
+  gameCode?: string;
 }
 type State = {
+  userId: String;
+  currentPlayer: Player;
+
+  answeringPlayer: Player;
+
+  activePlayers: Player[];
   loggedIn: boolean;
+
+  gameStarted: boolean;
+  isAskingPlayer: boolean;
+  isAnsweringPlayer: boolean;
+  isChosenPlayer: boolean;
+  isRPSPlayer: boolean;
+  hasAskedQuestion: boolean;
+  hasChosenPlayer: boolean;
+  questionText: string;
+  chooseText: string;
+  buttonText: string;
+  questionReveal: boolean;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
   constructor(props){
     super(props);
+    this.state = {
+      userId: undefined,
+      currentPlayer: {
+        name:"",
+        _id: undefined
+      },
+      answeringPlayer: {
+        name:"",
+        _id: undefined
+      },
+      activePlayers: [],
+      loggedIn: false,
+      gameStarted: false,
+      isAskingPlayer: false,
+      isAnsweringPlayer: false,
+      isChosenPlayer: false,
+      isRPSPlayer: false,
+      hasAskedQuestion: false,
+      hasChosenPlayer: false,
+      questionText:"",
+      chooseText:"",
+      buttonText:"Start game",
+      questionReveal: false,
+    };
   }
+
+  enableRPS = () => {
+    this.setState({isRPSPlayer:true});
+  }
+
+  disableQuestionSubmit = () => {
+    this.setState({isAskingPlayer:false});
+  }
+
+  disableButtonList = () => {
+    this.setState({isAnsweringPlayer:false});
+  }
+
+  disableRPS = () => {
+    this.setState({isRPSPlayer:false, isChosenPlayer:false});
+  }
+
+  componentDidMount() {
+    get("/api/whoami")
+      .then((user: User) => {
+        if (user._id) {
+          // They are registed in the database and currently logged in.
+          const currentPlayer: Player = {
+            name:user.name,
+            _id:user._id
+          };
+          this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn: true});
+        }
+      })
+      .then(() =>
+        socket.on("connect", () => {
+          post("/api/initsocket", { socketid: socket.id });
+        })
+      )
+      
+    get("/api/activeUsers").then((data) => {
+      const playerList : Player[] = [];
+      for (let i = 0; i < data.activeUsers.length; i++) {
+        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+        playerList.push(newPlayer)
+      }
+      this.setState({
+        activePlayers: data.activePlayers,
+      });
+    })
+    
+    socket.on("activeUsers", (data) => {
+      const playerList : Player[] = [];
+      for (let i = 0; i < data.activeUsers.length; i++) {
+        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+        playerList.push(newPlayer)
+      }
+      this.setState({
+        activePlayers: data.activePlayers,
+      });
+      // if (this.state.activePlayers.length > 1 && !(this.state.gameStarted)) {
+      //   post("/api/update", {});
+      // }
+    });
+
+    socket.on("question", (data) => {
+      //TODO: implement me 
+      if (data.gameState.answerer._id === this.state.userId){
+        console.log(`${data.gameState.asker.name} asks: ${data.questionText}`);
+        this.setState({isAnsweringPlayer:true, questionText:`${data.gameState.asker.name} asks: ${data.questionText}`, chooseText:''});
+      }
+      else if (data.gameState.asker._id !== this.state.userId) {
+        console.log(`${data.gameState.asker.name} is asking ${data.gameState.answerer.name} a question...`);
+        this.setState({questionText:`${data.gameState.asker.name} is asking ${data.gameState.answerer.name} a question...`})
+      }
+    });
+
+    socket.on("choose", (data) => {
+      //TODO: implement me
+      if (data.gameState.chosen._id === this.state.userId) {
+        console.log(`${data.gameState.answerer.name} chose you!`);
+        this.setState({isChosenPlayer:true, chooseText:`${data.gameState.answerer.name} chose you!`});
+      }
+      else if (data.gameState.answerer._id === this.state.userId) {
+        console.log(`You chose ${data.gameState.chosen.name}!`);
+        this.setState({isRPSPlayer:true, chooseText:`You chose ${data.gameState.chosen.name}!`});
+      }
+      else {
+        console.log(`${data.gameState.answerer.name} chose ${data.gameState.chosen.name}!`);
+        this.setState({chooseText:`${data.gameState.answerer.name} chose ${data.gameState.chosen.name}!`})
+      }
+      // post("/api/update", {})
+      // post("/api/rps", )
+    })
+
+    socket.on("update", (data) => {
+      //TODO: implement me
+      this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', chooseText: '', hasAskedQuestion: false, hasChosenPlayer: false});
+      // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
+      console.log(this.state.isAskingPlayer)
+    })
+
+    //todo for rps
+    socket.on("rpsupdate", (data) => {
+      console.log(`rpsupdate, winner ${data.winner.name}`)
+      if (data.winner._id === data.gameState.answerer._id) {
+        this.setState({questionReveal: false, questionText:`${data.winner.name} won, so the question will not be revealed.`});
+        console.log(`Question will not be revealed.`)
+      } else if (data.winner._id === data.gameState.chosen._id) {
+        this.setState({questionReveal: true, questionText: `${data.winner.name} won! The question was "${data.gameState.currentQuestion}"`})
+        console.log(`Revealed question is ${data.gameState.currentQuestion}`)
+      }
+      this.setState({gameStarted: false, buttonText:'Next round'});
+      // post("/api/update", {})
+      // this.setState({isAskingPlayer:data.gameState.asker._id ===this.state.userId, isAnsweringPlayer:data.gameState.answerer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.gameState.answerer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
+      // console.log(this.state.isAskingPlayer)
+    })
+  }
+
+  startGame= () => {
+    post("/api/update", {});
+  }
+
     render() {
       return (
         <>
@@ -40,7 +209,16 @@ class Game extends Component<Props & RouteComponentProps, State> {
           />
         )}
         </div>
-          )
+        <PlayerList playerList={this.state.activePlayers}/>
+        <h2>{this.state.questionText}</h2>
+        <h2>{this.state.chooseText}</h2>
+
+        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</button>):null}
+        {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
+        {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
+
+        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS}/>):null}
+          
           </>
       )
       }

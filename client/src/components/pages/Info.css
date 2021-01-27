@@ -1,0 +1,30 @@
+.Rules{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 48px;
+    line-height: 60px;
+}
+
+.rectangle {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 661px;
+    height: 492px;
+
+    background: #FFE7C2;
+    border-radius: 21px;
+  }
+
+.Body{
+    background-color: #FED8D8;
+}
