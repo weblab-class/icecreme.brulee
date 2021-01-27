@@ -63,7 +63,6 @@ interface Props {
                 The turn continues, the person who was previously asked a question will ask his/her neighbor, and so forth.
               </li>
             </ul>
-
             
           </div>
           
