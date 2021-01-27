@@ -10,6 +10,8 @@ import "../utilities.css";
 import Player from "../../../shared/Player";
 import PlayerBlock from "./Player";
 import "./NewTextInput.css";
+import { Button, Input } from 'semantic-ui-react';
+
 
 // Based on NewPostInput from Catbook
 
@@ -48,21 +50,21 @@ class NewTextInput extends Component<NewTextInputProps, NewTextInputState>{
     render() {
         return (
             <div className="input_text">
-                <input
+                <input id="input"
                     type="text"
                     placeholder={this.props.defaultText}
                     value={this.state.value}
                     onChange={this.handleChange}
                     // className="NewPostInput-input"
                 />
-                <button
+                <Button id="button"
                     type="submit"
                     // className="NewPostInput-button u-pointer"
                     value="Submit"
                     onClick={this.handleSubmit}
                 >
                     Submit
-                </button>
+                </Button>
             </div>
         );
     }
@@ -111,7 +113,9 @@ class NewCodeInput extends Component<NewCodeInputProps, {}> {
     }
     render() {
         return (
-            <NewTextInput defaultText='Enter code' onSubmit={this.moveToGame}/>
+            <div className = "enter">
+            <NewTextInput defaultText='Enter game code' onSubmit={this.moveToGame}/>
+            </div>
         )
     }
 }

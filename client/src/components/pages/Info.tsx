@@ -66,10 +66,12 @@ interface Props {
             
           </div>
           
+
           <div className="Button">
             <Button onClick = {this.goToSetup}> Back </Button>
           </div>
-        </div>
+
+          </div>
 
           <img className = 'Icecreme1' src="https://i.imgur.com/kdi2Sel.png" title="source: imgur.com" width="100"/>
 
