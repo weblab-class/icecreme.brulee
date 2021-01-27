@@ -9,6 +9,7 @@ import { TwitterPicker, PhotoshopPicker } from 'react-color';
 import { Button, Input, Grid} from 'semantic-ui-react'
 import { post } from '../../utilities';
 import { navigate } from "@reach/router";
+import Player from '../../../../shared/Player';
 
 
 
@@ -16,6 +17,7 @@ type Props = {
   userId: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
+  player: Player;
 }
 
 type State = {
@@ -38,8 +40,8 @@ class Setup extends Component<Props & RouteComponentProps, State> {
   handleSubmit = (event) => {
       const player = {name: this.state.name, color: this.state.color}
       console.log("new player attributes: " + player)
-      post('/api/playerUpdate', player)
-      navigate("/game")
+      // post('/api/playerUpdate', player)
+      navigate("/join")
   }
   
   goToInfo = () => {

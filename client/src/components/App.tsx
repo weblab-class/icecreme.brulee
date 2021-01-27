@@ -224,9 +224,9 @@ class App extends Component<{}, State> {
           path = "/setup"
           player = {this.state.currentPlayer}
 
-          // userId = {this.state.userId}
-          // handleLogin = {this.handleLogin}
-          // handleLogout = {this.handleLogout}
+          userId = {this.state.userId}
+          handleLogin = {this.handleLogin}
+          handleLogout = {this.handleLogout}
           />
 
             <Game
