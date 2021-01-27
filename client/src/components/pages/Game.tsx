@@ -42,6 +42,7 @@ type State = {
   buttonText: string;
   questionReveal: boolean;
   codeText: string;
+  fermiQuestion: string;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
@@ -71,6 +72,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       buttonText:"Start game",
       questionReveal: false,
       codeText: "Room code: " + this.props.gameCode,
+      fermiQuestion: "",
     };
   }
 
@@ -88,6 +90,10 @@ class Game extends Component<Props & RouteComponentProps, State> {
 
   disableRPS = () => {
     this.setState({isRPSPlayer:false, isChosenPlayer:false});
+  }
+
+  getFermiQuestion = () => {
+    get("fermi", {gameCode:this.props.gameCode});
   }
 
   componentDidMount() {
