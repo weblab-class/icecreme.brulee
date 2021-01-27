@@ -14,7 +14,8 @@ import { socket } from '../../client-socket';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 import { navigate } from "@reach/router";
 import Chat from "../Chat";
-import FermiBlock from "../FermiBlock"
+import { Button, Input } from 'semantic-ui-react';
+
 
 type Props = {
   userId: String;
@@ -93,11 +94,11 @@ class Game extends Component<Props & RouteComponentProps, State> {
     this.setState({isRPSPlayer:false, isChosenPlayer:false});
   }
 
-  getFermiQuestion = () => {
-    get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
-      this.setState({fermiQuestion: data});
-    });
-  }
+  // getFermiQuestion = () => {
+  //   get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
+  //     this.setState({fermiQuestion: data});
+  //   });
+  // }
 
   componentDidMount() {
     get("/api/whoami")
@@ -252,13 +253,14 @@ class Game extends Component<Props & RouteComponentProps, State> {
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
-        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</button>):null}
+        {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</Button>):null}
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
         {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
         {/* {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion}/>):null} */}
-        <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/></>
+        <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
+          </>
       )
       }
     }
