@@ -1,10 +1,12 @@
 import express from "express";
 import auth from "./auth";
-import { gameState, getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers} from "./logic";
+import { getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers} from "./logic";
 import socketManager, { addUser, getAllConnectedUsers } from "./server-socket";
 const router = express.Router();
 
 const socket = require("./server-socket");
+
+const Message = require("./models/message");
 
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
@@ -172,6 +174,10 @@ router.post('/rps', auth.ensureLoggedIn, (req, res) => {
 })
 
 router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode);
+  if (gameState === undefined) {
+    return;
+  }
   console.log(req.body.fermiAns)
   if (req.user){
     if (gameState.answerer?._id === req.user._id && gameState.answererRPS === undefined){
@@ -202,6 +208,39 @@ router.post('/newgame', auth.ensureLoggedIn, (req, res) => {
   }
   res.send({});
 })
+
+
+
+// chat messages
+
+router.get("/chat", (req, res) => {
+  let query = { "gameCode":req.query.gameCode};
+  
+  Message.find(query).then((messages:any) => {
+    console.log(`found ${messages.length} messages`);
+    res.send(messages)
+  });
+});
+
+router.post("/message", auth.ensureLoggedIn, (req, res) => {
+  if (req.user) {
+    console.log(`Received a chat message from ${req.user.name}: ${req.body.content}`);
+
+  // insert this message into the database
+  const message = new Message({
+    sender: {
+      _id: req.user._id,
+      name: req.user.name,
+    },
+    content: req.body.content,
+    gameCode: req.body.gameCode,
+  });
+  message.save();
+
+  socket.getIo().emit("message", message);
+  }
+});
+
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {

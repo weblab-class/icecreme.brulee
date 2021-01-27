@@ -1,0 +1,13 @@
+.Chat-container {
+    height: 50%;
+  }
+  
+  .Chat-newContainer {
+    width: 100%;
+  }
+  
+  .Chat-historyContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  

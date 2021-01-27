@@ -116,4 +116,19 @@ class NewCodeInput extends Component<NewCodeInputProps, {}> {
     }
 }
 
-export {NewQuestionInput, NewCodeInput};
+interface NewMessageProps {
+    gameCode: string;
+  }
+  
+class NewMessage extends Component<NewMessageProps> {
+    sendMessage = (value: string) => {
+      const body = { content: value , gameCode: this.props.gameCode};
+      post("/api/message", body);
+    };
+  
+    render() {
+      return <NewTextInput defaultText="New Message" onSubmit={this.sendMessage} />;
+    }
+}
+
+export {NewQuestionInput, NewCodeInput, NewMessage};
