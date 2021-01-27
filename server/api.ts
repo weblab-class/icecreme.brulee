@@ -1,4 +1,6 @@
 import express from "express";
+//import PlayerBlock from "../client/src/components/Player";
+import Player from "../shared/Player";
 import auth from "./auth";
 import { gameState, getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion } from "./logic";
 import socketManager from "./server-socket";
@@ -40,6 +42,26 @@ router.post("/removeSocket", (req, res) => {
   res.send({});
 });
 
+//update player with their custom avatar and name
+//request is a Player object
+router.post("/playerUpdate", (req, res) => {
+  if (req.user) {
+    let player: Player;
+    let newPlayerList: Player [] = [];
+    for (player of gameState.playerList) {
+      if (player._id === req.body._id) {
+        player.name = req.body.name;
+        player.color = req.body.color;
+        newPlayerList.push(player)
+      } else {
+        newPlayerList.push(player)
+      }
+    }
+    console.log(newPlayerList)
+    gameState.playerList = newPlayerList;
+    socket.getIo().emit("activeUsers", {activeUsers: gameState.playerList})
+  }
+})
 
 router.post("/question", auth.ensureLoggedIn, (req, res) => {
   //TODO: implement socket.on for question

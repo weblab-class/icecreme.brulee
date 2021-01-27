@@ -9,11 +9,13 @@ import { TwitterPicker, PhotoshopPicker } from 'react-color';
 import { Button, Input, Grid} from 'semantic-ui-react'
 import { post } from '../../utilities';
 import { navigate } from "@reach/router";
+import Player from "../../../../shared/Player";
 
 
 
 type Props = {
   userId: String;
+  currentName?: String;
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
 }
@@ -36,9 +38,13 @@ class Setup extends Component<Props & RouteComponentProps, State> {
       this.setState({color: color.hex})
   }
   handleSubmit = (event) => {
-      const player = {name: this.state.name, color: this.state.color}
-      console.log("new player attributes: " + player)
-      post('/api/playerUpdate', player)
+      let newName;
+      //google name will be used if no name is inputted
+      newName = this.state.name ? this.state.name : this.props.currentName;
+      const updatedPlayer: Player = {name: newName, _id: this.props.userId, color: this.state.color}
+      console.log("new player attributes: " + updatedPlayer)
+      post('/api/playerUpdate', updatedPlayer)
+      navigate('/game')
   }
   
   goToInfo = () => {

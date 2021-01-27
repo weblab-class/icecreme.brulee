@@ -109,7 +109,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
     get("/api/activeUsers").then((data) => {
       const playerList : Player[] = [];
       for (let i = 0; i < data.activeUsers.length; i++) {
-        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id, color: data.activeUsers[i].color}
         playerList.push(newPlayer)
       }
       this.setState({
@@ -120,7 +120,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
     socket.on("activeUsers", (data) => {
       const playerList : Player[] = [];
       for (let i = 0; i < data.activeUsers.length; i++) {
-        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id}
+        const newPlayer: Player = {name: data.activeUsers[i].name, _id: data.activeUsers[i]._id, color: (data.activeUsers[i].color || undefined)}
         playerList.push(newPlayer)
       }
       this.setState({
@@ -130,6 +130,8 @@ class Game extends Component<Props & RouteComponentProps, State> {
       //   post("/api/update", {});
       // }
     });
+
+
 
     socket.on("question", (data) => {
       //TODO: implement me 

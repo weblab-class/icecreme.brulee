@@ -220,6 +220,7 @@ class App extends Component<{}, State> {
           <Setup 
           path = "/setup"
           userId = {this.state.userId}
+          currentName = {this.state.currentPlayer.name}
           handleLogin = {this.handleLogin}
           handleLogout = {this.handleLogout}
           />
