@@ -25,14 +25,26 @@ class Join extends Component<Props & RouteComponentProps, {}> {
     render() {
         return (
             <>
-            <div className = "rectangle1" />
-            <h2 id="title">Create / Join Game</h2>
-            <div className = "rectangle2" />
-            <div className = "Join">
-                <h2>Join game</h2>
+            <div className = "rectangle1">
+                <h2 id="title">Create / Join Game</h2>
+            </div>
+            <div className = "rectangle2">
+                <div className = "circle1">
+                    <div className = "Create">
+                        <h2 id="jointxt">Create game</h2>
+                    </div>
+                </div>
+
+                <div className = "circle2">
+                    <div className = "Join">
+                        <h2 id="jointxt">Join game</h2>
+                    </div>
+                </div>
+            <div className = "Submit">
                 <NewCodeInput setCode={this.props.setCode}/>
             </div>
-                
+
+            </div>
             </>
         )
     }
