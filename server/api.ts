@@ -233,16 +233,21 @@ router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
   }
   if (gameState.answerer && gameState.chosen && gameState.answererFermi && gameState.chosenFermi) {
     //TODO: get the Fermi answer and question
-    const winner = getFermiWinner(gameState.answererFermi, gameState.chosenFermi, 0, req.body.gameCode);
-    if (winner) {
-      console.log(`Between answerer ${gameState.answerer.name} and choice ${gameState.chosen.name}, ${winner.name} won!`);
-        for (let i = 0; i < gameState.playerList.length; i++) {
-          let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
-          if (playerSocket !== undefined) {
-            playerSocket.emit("fermiupdate", {gameState:gameState, winner:winner});
-          }
+    let query = {"question": req.body.fermiText};
+    Fermi.find(query).then((fermis:any) => {
+      let answer = fermis[0].answer;
+      const winner = getFermiWinner(gameState.answererFermi!, gameState.chosenFermi!, answer, req.body.gameCode);
+      if (gameState.answerer && gameState.chosen && winner) {
+        console.log(`Between answerer ${gameState.answerer.name} and choice ${gameState.chosen.name}, ${winner.name} won!`);
+          for (let i = 0; i < gameState.playerList.length; i++) {
+            let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+            if (playerSocket !== undefined) {
+              playerSocket.emit("fermiupdate", {gameState:gameState, winner:winner});
+            }
+        }
       }
-    }
+    })
+    
   }
 })
 
