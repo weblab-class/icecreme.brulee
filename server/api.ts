@@ -48,6 +48,7 @@ router.post("/removeSocket", (req, res) => {
 //update player with their custom avatar and name
 //request is a Player object
 router.post("/playerUpdate", (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode)!
   if (req.user) {
     let player: Player;
     let newPlayerList: Player [] = [];
@@ -62,7 +63,14 @@ router.post("/playerUpdate", (req, res) => {
     }
     console.log(newPlayerList)
     gameState.playerList = newPlayerList;
-    socket.getIo().emit("activeUsers", {activeUsers: gameState.playerList})
+
+    for (let i = 0; i < gameState.playerList.length; i++) {
+      let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+      if (playerSocket !== undefined) {
+        playerSocket.emit("activeUsers", {activePlayers:gameState.playerList, activeUsers: gameState.playerList});
+      }
+    }
+    res.send({});
   }
 })
 

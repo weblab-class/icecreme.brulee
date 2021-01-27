@@ -19,6 +19,7 @@ type Props = {
   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
   handleLogout: () => void;
   player: Player;
+  gameCode: string;
 }
 
 type State = {
@@ -40,17 +41,18 @@ class Setup extends Component<Props & RouteComponentProps, State> {
   }
   handleSubmit = (event) => {
       let newName;
+      console.log("I just submited")
       //google name will be used if no name is inputted
       newName = this.state.name ? this.state.name : this.props.currentName;
-      const updatedPlayer: Player = {name: newName, _id: this.props.userId, color: this.state.color}
-      console.log("new player attributes: " + updatedPlayer)
-      post('/api/playerUpdate', updatedPlayer)
+      const updatedPlayer: Player = {name: newName, _id: this.props.userId, color: this.state.color, gameCode: this.props.gameCode}
+      console.log(`new player attributes: ${updatedPlayer}`);
+      post('/api/playerUpdate', updatedPlayer).then(() => {
+        navigate("/game")
+      })
       //navigate('/game')
 
       //const player = {name: this.state.name, color: this.state.color}
-      console.log("new player attributes: " + updatedPlayer)
       // post('/api/playerUpdate', player)
-      navigate("/join")
   }
   
   goToInfo = () => {
@@ -74,8 +76,8 @@ class Setup extends Component<Props & RouteComponentProps, State> {
           <input placeholder='Name' className = "center setupInput" onChange = {this.nameChange}></input>
                     <div className = "newCircle center" style={{background:this.state.color}}>{this.state.name}</div>
                     <TwitterPicker  className = "center" color={ this.state.color }
-                        //onChangeComplete={ this.onChangeColor}
-                        onSwatchHover = {this.onChangeColor}
+                        onChangeComplete={ this.onChangeColor}
+                        //onSwatchHover = {this.onChangeColor}
                     ></TwitterPicker>
 
                 <Button onClick = {this.handleSubmit}>Submit</Button>
