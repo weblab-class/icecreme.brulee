@@ -59,7 +59,7 @@ interface Props {
               </li>
 
               <li>
-              The pair described above will play rock paper scissors: If the person who answered the question wins, the question will not be revealed. If the person who was chosen wins, the question is revealed to everyone.
+              The pair described above will play rock paper scissors: If the person who asked the question wins, the question will not be revealed. If the person who was chosen wins, the question is revealed to everyone.
                 The turn continues, the person who was previously asked a question will ask his/her neighbor, and so forth.
               </li>
             </ul>
@@ -70,6 +70,16 @@ interface Props {
           <div className="Button">
             <Button onClick = {this.goToSetup}> Back </Button>
           </div>
+
+          <img className = 'Icecreme1' src="https://i.imgur.com/kdi2Sel.png" title="source: imgur.com" width="100"/>
+
+          <img className = 'Icecreme2' src="https://i.imgur.com/jokyLks.png" title="source: imgur.com" width="120"/>
+
+          <img className = 'Icecreme3' src="https://i.imgur.com/Pmwanzs.png" title="source: imgur.com" width="80"/>
+
+          <img className = 'Icecreme4' src="https://i.imgur.com/kdi2Sel.png" title="source: imgur.com" width="100"/>
+
+
           <style>{'body { background-color: #fff; }'}</style>
 
             </>
