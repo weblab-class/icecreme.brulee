@@ -95,10 +95,8 @@ class Game extends Component<Props & RouteComponentProps, State> {
   }
 
   // getFermiQuestion = () => {
-  //   get("fermi", {gameCode:this.props.gameCode}).then((data) => {
+  //   get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
   //     this.setState({fermiQuestion: data});
-  //     console.log('Q:')
-  //     console.log(data);
   //   });
   // }
 
@@ -260,6 +258,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
         {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
+        {/* {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion}/>):null} */}
         <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
           </>
       )

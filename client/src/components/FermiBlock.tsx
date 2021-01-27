@@ -16,9 +16,11 @@ import "./FermiBlock.css";
 interface Props {
     isRPSPlayer: boolean;
     isChosenPlayer: boolean;
+    gameCode: string;
     question?: String;
     answer?: number;
     fermiText: string;
+    disableRPS: ()=>void;
 }
 
 interface State {
@@ -43,6 +45,7 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
 
     submitAnswer = () => {
         const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText};
+        this.props.disableRPS();
         post('/api/fermi', fermiAns);
     }
 
