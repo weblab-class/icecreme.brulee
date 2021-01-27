@@ -13,7 +13,9 @@ import RangeSlider from 'react-bootstrap-range-slider';
 interface Props {
     isRPSPlayer: boolean;
     isChosenPlayer: boolean;
+    gameCode: string;
     fermiText: string;
+    disableRPS: ()=>void;
 }
 
 interface State {
@@ -31,6 +33,7 @@ class FermiBlock extends Component<Props, State> {
 
     submitAnswer = () => {
         const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText};
+        this.props.disableRPS();
         post('/api/fermi', fermiAns);
     }
 

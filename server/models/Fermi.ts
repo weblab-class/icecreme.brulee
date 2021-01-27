@@ -1,4 +1,5 @@
 import { Schema, model, Document } from "mongoose";
+const mongoose = require("mongoose");
 
 const FermiSchema = new Schema({
   question: String,
@@ -12,4 +13,4 @@ export interface Fermi extends Document {
 
 const FermiModel = model<Fermi>("Fermi", FermiSchema);
 
-export default FermiModel;
+module.exports = mongoose.model("Fermi", FermiSchema);

@@ -14,6 +14,7 @@ import { socket } from '../../client-socket';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 import { navigate } from "@reach/router";
 import Chat from "../Chat";
+import FermiBlock from "../FermiBlock"
 
 type Props = {
   userId: String;
@@ -93,10 +94,8 @@ class Game extends Component<Props & RouteComponentProps, State> {
   }
 
   getFermiQuestion = () => {
-    get("fermi", {gameCode:this.props.gameCode}).then((data) => {
+    get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
       this.setState({fermiQuestion: data});
-      console.log('Q:')
-      console.log(data);
     });
   }
 
@@ -166,7 +165,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       //   post("/api/update", {});
       // }
     });
-    // this.getFermiQuestion();
+    this.getFermiQuestion();
 
 
 
@@ -258,6 +257,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
         {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
+        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion}/>):null}
         <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
           </>
       )
