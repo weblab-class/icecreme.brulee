@@ -1,4 +1,6 @@
 import express from "express";
+//import PlayerBlock from "../client/src/components/Player";
+import Player from "../shared/Player";
 import auth from "./auth";
 import { getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers} from "./logic";
 import socketManager, { addUser, getAllConnectedUsers } from "./server-socket";
@@ -45,6 +47,34 @@ router.post("/removeSocket", (req, res) => {
   res.send({});
 });
 
+//update player with their custom avatar and name
+//request is a Player object
+router.post("/playerUpdate", (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode)!
+  if (req.user) {
+    let player: Player;
+    let newPlayerList: Player [] = [];
+    for (player of gameState.playerList) {
+      if (player._id === req.body._id) {
+        player.name = req.body.name;
+        player.color = req.body.color;
+        newPlayerList.push(player)
+      } else {
+        newPlayerList.push(player)
+      }
+    }
+    console.log(newPlayerList)
+    gameState.playerList = newPlayerList;
+
+    for (let i = 0; i < gameState.playerList.length; i++) {
+      let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+      if (playerSocket !== undefined) {
+        playerSocket.emit("activeUsers", {activePlayers:gameState.playerList, activeUsers: gameState.playerList});
+      }
+    }
+    res.send({});
+  }
+})
 
 router.post("/question", auth.ensureLoggedIn, (req, res) => {
   //TODO: implement socket.on for question

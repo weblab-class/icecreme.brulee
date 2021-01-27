@@ -17,8 +17,10 @@ class PlayerBlock extends Component<Props> {
         super(props);
     }
     render() {
+        let color:string = (String(this.props.player.color));
+        console.log(color)
         return (
-            <div className = "circle" >
+            <div className = "circle" style={{background: color}}>
                 {this.props.player.name}
             </div>
         )

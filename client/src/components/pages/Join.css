@@ -1,0 +1,49 @@
+.Join{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.rectangle1{
+    position: fixed;
+    width: 718px;
+    height: 97px;
+    left: 50%;
+    transform: translate(-50%);
+    margin-top: 5%;
+
+    background: linear-gradient(0deg, #FED8D8, #FED8D8), #FED8D8;
+    border-radius: 16px;
+}
+
+#title{
+    position: fixed;
+    width: 440px;
+    height: 60px;
+    left: 50%;
+    transform: translate(-50%);
+    margin-top: 6%;
+
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 48px;
+    line-height: 60px;
+    /* identical to box height */
+
+
+    color: #000000;
+}
+
+.rectangle2{
+    position: absolute;
+    width: 661px;
+    height: 492px;
+    left: 403px;
+    top: 315px;
+
+    background: #FFE7C2;
+    border-radius: 21px;
+}
