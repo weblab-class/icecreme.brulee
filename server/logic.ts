@@ -19,6 +19,7 @@ interface gameState {
     currentQuestion?: String;
     currentFermi?: String; 
     currentFermiAnswer?: number;
+    mode?: string;
 }
 
 type rps = "rock" | "paper" | "scissors";

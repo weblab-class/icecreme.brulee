@@ -31,7 +31,7 @@ class Setup extends Component<Props & RouteComponentProps, State> {
     super(props);
     this.state = {
         color: "#0000ff",
-        name: "",
+        name: String(this.props.player.name),
     }
   }
 

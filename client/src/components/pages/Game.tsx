@@ -47,6 +47,7 @@ type State = {
   codeText: string;
   fermiQuestion: string;
   fermiAnswer: number;
+  mode: string;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
@@ -78,6 +79,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       codeText: "Room code: " + this.props.gameCode,
       fermiQuestion: "",
       fermiAnswer: 0,
+      mode: "",
     };
   }
 
@@ -95,6 +97,17 @@ class Game extends Component<Props & RouteComponentProps, State> {
 
   disableRPS = () => {
     this.setState({isRPSPlayer:false, isChosenPlayer:false});
+  }
+
+  setMode = (mode: string) => {
+    this.setState({mode: mode});
+    // console.log('current game room')
+    // console.log(this.props.gameCode);
+    if (this.props.gameCode.length === 0) {
+      // console.log('error: game code not set.');
+      return;
+    }
+    post('/api/mode', {mode: mode, gameCode:String(this.props.gameCode)});
   }
 
   getFermiQuestion = () => {
@@ -143,6 +156,9 @@ class Game extends Component<Props & RouteComponentProps, State> {
         }),
         currentPlayer: current
       });
+      get('/api/mode', {gameCode: this.props.gameCode}).then((data) => {
+        this.setState({mode: data.mode});
+      })
     })
     
     socket.on("activeUsers", (data) => {
@@ -169,8 +185,6 @@ class Game extends Component<Props & RouteComponentProps, State> {
       //   post("/api/update", {});
       // }
     });
-    this.getFermiQuestion();
-
 
 
     socket.on("question", (data) => {
@@ -208,6 +222,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', chooseText: '', hasAskedQuestion: false, hasChosenPlayer: false});
       // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
       console.log(this.state.isAskingPlayer)
+      this.getFermiQuestion();
     })
 
     socket.on('fermi', (data) => {
@@ -228,6 +243,11 @@ class Game extends Component<Props & RouteComponentProps, State> {
       // post("/api/update", {})
       // this.setState({isAskingPlayer:data.gameState.asker._id ===this.state.userId, isAnsweringPlayer:data.gameState.answerer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.gameState.answerer, questionText:'', hasAskedQuestion: false, hasChosenPlayer: false});
       // console.log(this.state.isAskingPlayer)
+    })
+
+    socket.on("mode", (data) => {
+      console.log(`set reveal mode to ${data.mode}`);
+      this.setState({mode: data.mode});
     })
   }
 
@@ -260,13 +280,17 @@ class Game extends Component<Props & RouteComponentProps, State> {
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
-        {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</Button>):null}
+        {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn || this.state.mode.length === 0}> {this.state.buttonText}</Button>):null}
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
-        {/* {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null} */}
-        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion} answer={this.state.fermiAnswer}/>):null}
+        {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='rps' ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
+        {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='fermi' ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion} answer={this.state.fermiAnswer}/>):null}
         <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
+        {(!this.state.gameStarted && this.state.loggedIn)? (<span>
+          <Button type='submit' onClick={()=>{this.setMode('rps')}} disabled={this.state.mode==='rps'}>Classic Mode</Button>
+          <Button type='submit' onClick={()=>{this.setMode('fermi')}} disabled={this.state.mode==='fermi'}>Fermi Mode</Button>
+        </span>) : null}
           </>
       )
       }

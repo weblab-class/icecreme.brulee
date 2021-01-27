@@ -35,7 +35,7 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
         this.state = {
             min: Math.floor(((1.5+Math.random())*Math.abs(this.props.answer)) * -1), 
             max: Math.ceil((1.5+Math.random())*Math.abs(this.props.answer)), //can change the way this is calculated
-            value: undefined,
+            value: Math.floor(Math.ceil((1.5+Math.random())*Math.abs(this.props.answer))/2),
         }
     }
     //state

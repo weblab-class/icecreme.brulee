@@ -43,7 +43,7 @@ router.get("/activeUsers", (req, res) => {
 router.post("/removeSocket", (req, res) => {
   if (req.user) {
     const socket = socketManager.getSocketFromSocketID(req.body.socketid);
-    if (socket !== undefined) {socketManager.removeUser(req.user, socket, req.body.gameCode);}
+    if (socket !== undefined) {socketManager.removeUser(req.user, socket, "");}
   }
   res.send({});
 });
@@ -208,6 +208,9 @@ router.post('/rps', auth.ensureLoggedIn, (req, res) => {
 router.get('/fermi', auth.ensureLoggedIn, (req, res) => {
   // TODO: get random fermi
   const currentGameState = codeToGameState.get(String(req.query.gameCode))!;
+  if (currentGameState === undefined) {
+    return;
+  }
   if (currentGameState.currentFermi === undefined) {
     let query = {};
     let index:number = getRandomNumber(0, 216);
@@ -272,7 +275,42 @@ router.post('/newgame', auth.ensureLoggedIn, (req, res) => {
   res.send({});
 })
 
+router.get('/mode', auth.ensureLoggedIn, (req, res) =>{
+  if (req.user) {
+    const currentGameState = codeToGameState.get(String(req.query.gameCode))!;
+    if (currentGameState && currentGameState.mode === undefined) {
+      currentGameState.mode = 'rps';
+      res.send({mode: 'rps'});
+    }
+    // if (req.query.gameCode && req.query.gameCode.length === 0) {
+    //   return;
+    // }
+    else {
+      res.send({mode: currentGameState.mode});
+    }
+  }
+})
 
+router.post('/mode', auth.ensureLoggedIn, (req, res)=> {
+  if (req.user) {
+    const currentGameState = codeToGameState.get(String(req.body.gameCode))!;
+    // console.log('posting mode')
+    // console.log(req.body.gameCode);
+    if (req.body.gameCode.length === 0) {
+      // console.log(req.user!.name);
+      return;
+    }
+    currentGameState.mode = req.body.mode;
+    // console.log(codeToGameState);
+    // console.log(codeToGameState.get(String(req.body.gameCode)));
+    for (let i = 0; i < currentGameState.playerList.length; i++) {
+      let playerSocket = socketManager.getSocketFromUserID(String(currentGameState.playerList[i]._id));
+      if (playerSocket !== undefined) {
+        playerSocket.emit("mode", {mode: req.body.mode});
+    }
+  }}
+  res.send({});
+})
 
 // chat messages
 
