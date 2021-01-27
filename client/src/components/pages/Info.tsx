@@ -31,6 +31,7 @@ interface Props {
         return (
           <>
           <div className = "Body">
+            <div id = "rectangle" />
             <div className="rectangle" />
 
             <div className="Rules">
@@ -48,7 +49,7 @@ interface Props {
           </div>
 
 
-          <style>{'body { background-color: #FED8D8; }'}</style>
+          <style>{'body { background-color: #fff; }'}</style>
 
             </>
         )

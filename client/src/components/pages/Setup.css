@@ -8,4 +8,25 @@
     justify-content: center;
     align-items: center;
     font-size: 12;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; 
   }
+
+.avatar{
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  margin-bottom: 75%;
+}
+
+.palette{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}

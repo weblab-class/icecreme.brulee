@@ -42,7 +42,7 @@ class Login extends Component<Props & RouteComponentProps, State> {
           )}
         </div>
         
-        <style>{'body { background-color: #FFF; }'}</style>
+        <style>{'body { background-color: #fff; }'}</style>
       </>
     )
   }

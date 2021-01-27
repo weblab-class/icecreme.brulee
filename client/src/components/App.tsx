@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Router } from "@reach/router";
 import { get, post } from "../utilities";
 import NotFound from "./pages/NotFound";
-import Skeleton from "./pages/Skeleton";
+// import Skeleton from "./pages/Skeleton";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { socket } from "../client-socket";
 import User from "../../../shared/User";
@@ -205,7 +205,7 @@ class App extends Component<{}, State> {
       {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
           {/* <Skeleton
-            path="/"
+            path="/skeleton"
             handleLogin={this.handleLogin}
             handleLogout={this.handleLogout}
             userId={this.state.userId} 
@@ -219,9 +219,11 @@ class App extends Component<{}, State> {
 
           <Setup 
           path = "/setup"
-          userId = {this.state.userId}
-          handleLogin = {this.handleLogin}
-          handleLogout = {this.handleLogout}
+          player = {this.state.currentPlayer}
+
+          // userId = {this.state.userId}
+          // handleLogin = {this.handleLogin}
+          // handleLogout = {this.handleLogout}
           />
 
             <Game

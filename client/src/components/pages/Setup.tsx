@@ -8,14 +8,17 @@ const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.go
 import { TwitterPicker, PhotoshopPicker } from 'react-color';
 import { Button, Input } from 'semantic-ui-react'
 import { navigate } from "@reach/router";
+import Player from "../../../../shared/Player";
 
-
-
-type Props = {
-  userId: String;
-  handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
-  handleLogout: () => void;
+interface Props {
+  player: Player
 }
+
+// type Props = {
+//   userId: String;
+//   handleLogin: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void;
+//   handleLogout: () => void;
+// }
 
 type State = {
   color: string;
@@ -57,9 +60,15 @@ class Setup extends Component<Props & RouteComponentProps, State> {
     //   });
 
     return (
-      <div>
+      <>
+      <div className = 'avatar'>
+        <h1>Customize your avatar!</h1>
           <Input placeholder='Name' />
-          <div className = "newCircle" style={{background:this.state.color}}>Hello</div>
+      </div>
+
+      <div className = "newCircle" style={{background:this.state.color}}>{this.props.player.name}</div>
+
+      <div className = "palette">
           <TwitterPicker color={ this.state.color }
             onChangeComplete={ this.onChangeColor}
             onSwatchHover = {this.onChangeColor}></TwitterPicker>
@@ -68,6 +77,7 @@ class Setup extends Component<Props & RouteComponentProps, State> {
 
             <Button onClick = {this.goToInfo}>Game Info</Button>
       </div>
+    </>
     )
   }
 }
