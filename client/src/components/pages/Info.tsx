@@ -30,25 +30,46 @@ interface Props {
       render() {
         return (
           <>
-          <div className = "Body">
-            <div id = "rectangle" />
-            <div className="rectangle" />
+          <div id = "greeting">
+            <h2> Welcome {this.props.player.name}! </h2>
+          </div>
+          <div className="rectangle" />
 
-            <div className="Rules">
-                <h2>Hi {this.props.player.name}, welcome to icecreme.brulee! The rules are as follows: 
-
-                Everyone will input their names and gather around in a (virtual) circle.
-                The person starting the round will secretly ask his/her neighbor a question starting with "Who". (i.e. "Who is the most likely to die first in a zombie apocalypse?".
-                The person being asked will pick a person among the other friends.
-                The pair described above will rock paper scissors: If the person who answered the question wins, the question will not be revealed. If the person who was chosen wins, the question is revealed to everyone.
-                The turn continues, the person who was previously asked a question will ask his/her neighbor, and so forth. '''
-                
-                </h2>
-                <Button onClick = {this.goToSetup}> Back </Button>
-            </div>
+          <div className="Title">
+              {/* <h2>Rules</h2> */}
           </div>
 
 
+          <div className = "Rules">
+            <h4>icecreme.brulee is a fun game to play to get to know your friends better! ask deep questions, vote on memes, and much more... </h4> 
+            <ul>
+              <li>
+                Everyone will input their names and gather around in a (virtual) circle.
+
+              </li>
+
+              <li>
+                The person starting the round will secretly ask his/her neighbor a question starting with "Who". (i.e. "Who is the most likely to die first in a zombie apocalypse?)"
+
+              </li>
+
+              <li>
+                The person being asked will pick a person among the other friends.
+
+              </li>
+
+              <li>
+              The pair described above will play rock paper scissors: If the person who answered the question wins, the question will not be revealed. If the person who was chosen wins, the question is revealed to everyone.
+                The turn continues, the person who was previously asked a question will ask his/her neighbor, and so forth.
+              </li>
+            </ul>
+
+            
+          </div>
+          
+          <div className="Button">
+            <Button onClick = {this.goToSetup}> Back </Button>
+          </div>
           <style>{'body { background-color: #fff; }'}</style>
 
             </>

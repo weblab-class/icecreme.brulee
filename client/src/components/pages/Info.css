@@ -1,4 +1,10 @@
 
+.Title{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+}
 
 .Rules{
     position: fixed;
@@ -8,28 +14,12 @@
     text-align: center;
 }
 
-.rectangle1{
+#greeting{
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    
-    background: #FFE7C2;
-    border-radius: 21px;
-}
-
-#rectangle{
-    position: fixed;
+    margin-top: 5%;
     left: 50%;
     transform: translate(-50%);
     text-align: center;
-    width: 661px;
-    height: 100px;
-    margin-top: 25%;
-    
-    background: #FED8D8;
-    border-radius: 21px;
 }
 
 .rectangle {
@@ -38,13 +28,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    width: 661px;
-    height: 492px;
+    width: 700px;
+    height: 350px;
 
-    background: #FFE7C2;
-    border-radius: 21px;
+    background: #DEEFF5;
+    border-radius: 40%;
   }
 
-.Body{
-    background-color: #FFF;
+.Button{
+    position: fixed;
+    left: 50%;
+    margin-top: 9%;
+    transform: translate(-50%);
+    text-align: center;
 }
