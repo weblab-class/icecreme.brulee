@@ -37,7 +37,7 @@ class Chat extends Component<Props, State> {
     get("/api/chat", { gameCode: gameCode}).then((messages: Message[]) => {
       this.setState({
         data: {
-          messages: messages,
+          messages: messages.slice(Math.max(0, messages.length - 5)),
         },
       });
     });
@@ -49,7 +49,7 @@ class Chat extends Component<Props, State> {
         if (data.gameCode === this.props.gameCode) {
           this.setState((prevstate) => ({
             data: {
-              messages: prevstate.data.messages.concat(data),
+              messages: prevstate.data.messages.concat(data).slice(Math.max(0, prevstate.data.messages.length - 4)),
             },
           }));
         }

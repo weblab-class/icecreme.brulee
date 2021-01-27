@@ -209,7 +209,7 @@ router.get('/fermi', auth.ensureLoggedIn, (req, res) => {
   // TODO: get random fermi
   let query = {};
   let index:number = getRandomNumber(0, 216);
-  Fermi.find({}).then((fermis:any) => {res.send(fermis[index])});
+  Fermi.find({}).then((fermis:any) => {res.send(fermis[index].question)});
 })
 
 router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
@@ -282,7 +282,9 @@ router.post("/message", auth.ensureLoggedIn, (req, res) => {
   message.save();
 
   socket.getIo().emit("message", message);
+  res.send({message})
   }
+
 });
 
 

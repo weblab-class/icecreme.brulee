@@ -220,8 +220,8 @@ class App extends Component<{}, State> {
       {/* <RockPaperScissors /> */}
       {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
-          <FermiBlock path = '/fermi' isChosenPlayer = {true} isAnsweringPlayer = {true}>
-          </FermiBlock>
+          {/* <FermiBlock path = '/fermi' isChosenPlayer = {true} isAnsweringPlayer = {true}>
+          </FermiBlock> */}
           {/* <Skeleton
             path="/skeleton"
             handleLogin={this.handleLogin}
@@ -266,7 +266,7 @@ class App extends Component<{}, State> {
           <NotFound default={true} />
         </Router>
 
-        <button onClick = {this.goToFermi}>Fermis</button>
+        {/* <button onClick = {this.goToFermi}>Fermis</button> */}
 
         {/* <PlayerList playerList={this.state.activePlayers}/>
         <h2>{this.state.questionText}</h2>

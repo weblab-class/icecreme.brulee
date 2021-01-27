@@ -14,10 +14,11 @@ import "./FermiBlock.css";
 
 
 interface Props {
-    isAnsweringPlayer: boolean;
+    isRPSPlayer: boolean;
     isChosenPlayer: boolean;
     question?: String;
     answer?: number;
+    fermiText: string;
 }
 
 interface State {
@@ -41,8 +42,8 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
     }
 
     submitAnswer = () => {
-        const fermiAns = {fermiAns: this.state.value};
-        post('/api/fermi', fermiAns)
+        const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText};
+        post('/api/fermi', fermiAns);
     }
 
     // handleClick = (choice) => {
@@ -57,7 +58,7 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
             <div className = "fermiContainer">
                 <h3>Fermi's Questions</h3> 
                 <p>insert question here</p>
-                {(this.props.isAnsweringPlayer || this.props.isChosenPlayer) ? (<>
+                {(this.props.isRPSPlayer || this.props.isChosenPlayer) ? (<>
                     <RangeSlider
                         value={this.state.value || this.state.max/2}
                         onChange={this.setValue}
