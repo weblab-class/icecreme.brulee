@@ -2,11 +2,14 @@ import express from "express";
 //import PlayerBlock from "../client/src/components/Player";
 import Player from "../shared/Player";
 import auth from "./auth";
-import { gameState, getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers} from "./logic";
+import { getRPSWinner, setNextTurn, getFermiWinner, setChosenPlayer, setCurrentQuestion, getCurrentQuestion, codeToGameState, addNewGame, addPlayer, getAllPlayers, getRandomNumber} from "./logic";
 import socketManager, { addUser, getAllConnectedUsers } from "./server-socket";
 const router = express.Router();
 
 const socket = require("./server-socket");
+
+const Fermi = require("./models/Fermi");
+const Message = require("./models/message");
 
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
@@ -48,6 +51,7 @@ router.post("/removeSocket", (req, res) => {
 //update player with their custom avatar and name
 //request is a Player object
 router.post("/playerUpdate", (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode)!
   if (req.user) {
     let player: Player;
     let newPlayerList: Player [] = [];
@@ -62,7 +66,14 @@ router.post("/playerUpdate", (req, res) => {
     }
     console.log(newPlayerList)
     gameState.playerList = newPlayerList;
-    socket.getIo().emit("activeUsers", {activeUsers: gameState.playerList})
+
+    for (let i = 0; i < gameState.playerList.length; i++) {
+      let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+      if (playerSocket !== undefined) {
+        playerSocket.emit("activeUsers", {activePlayers:gameState.playerList, activeUsers: gameState.playerList});
+      }
+    }
+    res.send({});
   }
 })
 
@@ -193,24 +204,41 @@ router.post('/rps', auth.ensureLoggedIn, (req, res) => {
   }
 })
 
+//fermis
+router.get('/fermi', auth.ensureLoggedIn, (req, res) => {
+  // TODO: get random fermi
+  let query = {};
+  let index:number = getRandomNumber(0, 216);
+  Fermi.find({}).then((fermis:any) => {res.send(fermis[index])});
+})
+
 router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
+  const gameState = codeToGameState.get(req.body.gameCode)!;
   console.log(req.body.fermiAns)
   if (req.user){
-    if (gameState.answerer?._id === req.user._id && gameState.answererRPS === undefined){
+    if (gameState.answerer && gameState.chosen && gameState.answerer._id === req.user._id && gameState.answererFermi === undefined){
       gameState.answererFermi = req.body.fermiAns;
+      console.log(`Waiting on ${gameState.chosen.name}`)
+      console.log(gameState)
     }
     //if gameState.chosen instead of gameState.asker
-    if (gameState.asker?._id === req.user._id && gameState.chosenRPS === undefined){
+    if (gameState.answerer && gameState.chosen && gameState.chosen._id === req.user._id && gameState.chosenFermi === undefined){
       gameState.chosenFermi = req.body.fermiAns;
+      console.log(`Waiting on ${gameState.answerer.name}`)
+      console.log(gameState)
     }
   }
-  if (gameState.answererFermi && gameState.chosenFermi) {
+  if (gameState.answerer && gameState.chosen && gameState.answererFermi && gameState.chosenFermi) {
     //TODO: get the Fermi answer and question
-    const winner = getFermiWinner(gameState.answererFermi, gameState.chosenFermi, 0)
+    const winner = getFermiWinner(gameState.answererFermi, gameState.chosenFermi, 0, req.body.gameCode);
     if (winner) {
-      socketManager.getIo().emit("fermiupdate", {gameState, winner})
-      console.log(gameState)
-      console.log(`Between answerer ${gameState.answerer?.name!} and choice ${gameState.chosen?.name!}, ${winner.name} won!`);
+      console.log(`Between answerer ${gameState.answerer.name} and choice ${gameState.chosen.name}, ${winner.name} won!`);
+        for (let i = 0; i < gameState.playerList.length; i++) {
+          let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
+          if (playerSocket !== undefined) {
+            playerSocket.emit("fermiupdate", {gameState:gameState, winner:winner});
+          }
+      }
     }
   }
 })
@@ -224,6 +252,39 @@ router.post('/newgame', auth.ensureLoggedIn, (req, res) => {
   }
   res.send({});
 })
+
+
+
+// chat messages
+
+router.get("/chat", (req, res) => {
+  let query = { "gameCode":req.query.gameCode};
+  
+  Message.find(query).then((messages:any) => {
+    console.log(`found ${messages.length} messages`);
+    res.send(messages)
+  });
+});
+
+router.post("/message", auth.ensureLoggedIn, (req, res) => {
+  if (req.user) {
+    console.log(`Received a chat message from ${req.body.name}: ${req.body.content}`);
+
+  // insert this message into the database
+  const message = new Message({
+    sender: {
+      _id: req.user._id,
+      name: req.body.name,
+    },
+    content: req.body.content,
+    gameCode: req.body.gameCode,
+  });
+  message.save();
+
+  socket.getIo().emit("message", message);
+  }
+});
+
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {

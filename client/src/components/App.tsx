@@ -76,9 +76,19 @@ class App extends Component<{}, State> {
     };
   }
 
+  //william's initial join game code
+  // setGameCode = (code: string) => {
+  //   this.setState({gameCode: code});
+  //   navigate("/game");
+  //   post("/api/newgame", {gameCode:code}).then((value)=>{
+  //     console.log('redirecting...')
+  //     // post("/api/initsocket", { socketid: socket.id , gameCode:code});
+  //   });
+  // }
+
   setGameCode = (code: string) => {
     this.setState({gameCode: code});
-    navigate("/game");
+    navigate("/setup");
     post("/api/newgame", {gameCode:code}).then((value)=>{
       console.log('redirecting...')
       // post("/api/initsocket", { socketid: socket.id , gameCode:code});
@@ -172,7 +182,7 @@ class App extends Component<{}, State> {
         };
         this.setState({ userId: user._id, currentPlayer: currentPlayer, loggedIn:true});
         post("/api/initsocket", { socketid: socket.id }).then(() => {
-          navigate("/setup");
+          navigate("/join");
         })
       });
     }
@@ -223,6 +233,7 @@ class App extends Component<{}, State> {
           <Setup 
           path = "/setup"
           player = {this.state.currentPlayer}
+          gameCode = {this.state.gameCode}
 
           userId = {this.state.userId}
           currentName = {this.state.currentPlayer.name}

@@ -67,8 +67,9 @@ export const getRPSWinner = (chooser: rps, choice: rps, code:string): Player | u
     }
 }
 
-export const getFermiWinner = (chooser: number, choice: number, answer: number): Player | undefined => {
+export const getFermiWinner = (chooser: number, choice: number, answer: number, code: string): Player | undefined => {
     //two player objects: need to standardize how we do this part first
+    const gameState = codeToGameState.get(code)!;
     const player1 = gameState.answerer;
     const player2 = gameState.chosen;
 
@@ -204,6 +205,12 @@ export const getAllPlayers = (): Player[] => {
     return allPlayers;
 }
 
+export const getRandomNumber = (min: number, max: number) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
 export default {
     gameState,
     codeToGameState,
@@ -217,4 +224,5 @@ export default {
     getCurrentQuestion,
     addNewGame,
     getAllPlayers,
+    getRandomNumber
   };
