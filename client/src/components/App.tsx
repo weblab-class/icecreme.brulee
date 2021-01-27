@@ -225,6 +225,7 @@ class App extends Component<{}, State> {
           player = {this.state.currentPlayer}
 
           userId = {this.state.userId}
+          currentName = {this.state.currentPlayer.name}
           handleLogin = {this.handleLogin}
           handleLogout = {this.handleLogout}
           />
