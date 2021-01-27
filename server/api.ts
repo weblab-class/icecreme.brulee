@@ -207,12 +207,27 @@ router.post('/rps', auth.ensureLoggedIn, (req, res) => {
 //fermis
 router.get('/fermi', auth.ensureLoggedIn, (req, res) => {
   // TODO: get random fermi
-  let query = {};
-  let index:number = getRandomNumber(0, 216);
-  Fermi.find({}).then((fermis:any) => {
-    console.log(fermis[index].question)
-    res.send(JSON.stringify(fermis[index].question))
-  });
+  const currentGameState = codeToGameState.get(String(req.query.gameCode))!;
+  if (currentGameState.currentFermi === undefined) {
+    let query = {};
+    let index:number = getRandomNumber(0, 216);
+    Fermi.find({}).then((fermis:any) => {
+      console.log(fermis[index].question)
+      currentGameState.currentFermi = fermis[index].question;
+      currentGameState.currentFermiAnswer = fermis[index].answer;
+      console.log(`A: ${fermis[index].answer}`);
+      for (let i = 0; i < currentGameState.playerList.length; i++) {
+        let playerSocket = socketManager.getSocketFromUserID(String(currentGameState.playerList[i]._id));
+        if (playerSocket !== undefined) {
+          playerSocket.emit("fermi", {});
+        }
+      }
+      res.send({question:JSON.stringify(fermis[index].question), answer:fermis[index].answer})
+    });
+  }
+  else {
+    res.send({question: JSON.stringify(currentGameState.currentFermi!), answer: currentGameState.currentFermiAnswer!});
+  }
 })
 
 router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
@@ -233,20 +248,16 @@ router.post('/fermi', auth.ensureLoggedIn, (req, res) => {
   }
   if (gameState.answerer && gameState.chosen && gameState.answererFermi && gameState.chosenFermi) {
     //TODO: get the Fermi answer and question
-    let query = {"question": req.body.fermiText};
-    Fermi.find(query).then((fermis:any) => {
-      let answer = fermis[0].answer;
-      const winner = getFermiWinner(gameState.answererFermi!, gameState.chosenFermi!, answer, req.body.gameCode);
+      const winner = getFermiWinner(gameState.answererFermi!, gameState.chosenFermi!, gameState.currentFermiAnswer!, req.body.gameCode);
       if (gameState.answerer && gameState.chosen && winner) {
         console.log(`Between answerer ${gameState.answerer.name} and choice ${gameState.chosen.name}, ${winner.name} won!`);
           for (let i = 0; i < gameState.playerList.length; i++) {
             let playerSocket = socketManager.getSocketFromUserID(String(gameState.playerList[i]._id));
             if (playerSocket !== undefined) {
-              playerSocket.emit("fermiupdate", {gameState:gameState, winner:winner});
+              playerSocket.emit("rpsupdate", {gameState:gameState, winner:winner});
             }
         }
       }
-    })
     
   }
 })

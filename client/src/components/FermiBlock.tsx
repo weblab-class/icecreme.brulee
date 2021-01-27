@@ -33,18 +33,18 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
     constructor(props) {
         super(props);
         this.state = {
-            value: null,
-            min: 0,
-            max: (1.5+Math.random())*this.props.answer, //can change the way this is calculated
+            min: Math.floor(((1.5+Math.random())*Math.abs(this.props.answer)) * -1), 
+            max: Math.ceil((1.5+Math.random())*Math.abs(this.props.answer)), //can change the way this is calculated
+            value: undefined,
         }
     }
     //state
     setValue = (event) => {
-        this.setState({value: event.target.value})
+        this.setState({value: event.target.value});
     }
 
     submitAnswer = () => {
-        const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText};
+        const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText, gameCode: this.props.gameCode};
         this.props.disableRPS();
         post('/api/fermi', fermiAns);
     }
@@ -60,10 +60,10 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
         return (
             <div className = "fermiContainer">
                 <h3>Fermi's Questions</h3> 
-                <p>insert question here</p>
+                <p>{this.props.fermiText}</p>
                 {(this.props.isRPSPlayer || this.props.isChosenPlayer) ? (<>
                     <RangeSlider
-                        value={this.state.value || this.state.max/2}
+                        value={this.state.value || Math.floor(this.state.max/2)}
                         onChange={this.setValue}
                         min = {0}
                         max = {this.state.max}

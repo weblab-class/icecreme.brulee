@@ -16,7 +16,9 @@ interface gameState {
     chosenRPS?: rps | undefined;
     answererFermi?: number | undefined;
     chosenFermi?: number | undefined;
-    currentQuestion?: String 
+    currentQuestion?: String;
+    currentFermi?: String; 
+    currentFermiAnswer?: number;
 }
 
 type rps = "rock" | "paper" | "scissors";
@@ -158,6 +160,9 @@ export const setNextTurn = (code:string) => {
     gameState.chosen = undefined;
     gameState.answererRPS = undefined;
     gameState.chosenRPS = undefined;
+    gameState.answererFermi = undefined;
+    gameState.chosenFermi = undefined;
+    gameState.currentFermi = undefined;
     if (gameState.turn === gameState.playerList.length) {
         gameState.asker = gameState.playerList[gameState.turn-1]
         gameState.answerer = gameState.playerList[0]

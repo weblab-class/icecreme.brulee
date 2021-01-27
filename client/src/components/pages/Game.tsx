@@ -15,6 +15,7 @@ const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.go
 import { navigate } from "@reach/router";
 import Chat from "../Chat";
 import { Button, Input } from 'semantic-ui-react';
+import FermiBlock from '../FermiBlock';
 
 
 type Props = {
@@ -45,6 +46,7 @@ type State = {
   questionReveal: boolean;
   codeText: string;
   fermiQuestion: string;
+  fermiAnswer: number;
 }
 
 class Game extends Component<Props & RouteComponentProps, State> {
@@ -75,6 +77,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       questionReveal: false,
       codeText: "Room code: " + this.props.gameCode,
       fermiQuestion: "",
+      fermiAnswer: 0,
     };
   }
 
@@ -94,11 +97,11 @@ class Game extends Component<Props & RouteComponentProps, State> {
     this.setState({isRPSPlayer:false, isChosenPlayer:false});
   }
 
-  // getFermiQuestion = () => {
-  //   get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
-  //     this.setState({fermiQuestion: data});
-  //   });
-  // }
+  getFermiQuestion = () => {
+    get("/api/fermi", {gameCode:this.props.gameCode}).then((data) => {
+      this.setState({fermiQuestion: data.question, fermiAnswer: data.answer});
+    });
+  }
 
   componentDidMount() {
     get("/api/whoami")
@@ -166,7 +169,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       //   post("/api/update", {});
       // }
     });
-    // this.getFermiQuestion();
+    this.getFermiQuestion();
 
 
 
@@ -205,6 +208,10 @@ class Game extends Component<Props & RouteComponentProps, State> {
       this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, questionText:'', chooseText: '', hasAskedQuestion: false, hasChosenPlayer: false});
       // this.setState({isAskingPlayer:data.askingPlayer._id ===this.state.userId, gameStarted:true, answeringPlayer:data.answeringPlayer, isAnsweringPlayer:data.answeringPlayer._id ===this.state.userId, questionText:''});
       console.log(this.state.isAskingPlayer)
+    })
+
+    socket.on('fermi', (data) => {
+      this.getFermiQuestion();
     })
 
     //todo for rps
@@ -257,8 +264,8 @@ class Game extends Component<Props & RouteComponentProps, State> {
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
-        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
-        {/* {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion}/>):null} */}
+        {/* {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null} */}
+        {this.state.isRPSPlayer || this.state.isChosenPlayer ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion} answer={this.state.fermiAnswer}/>):null}
         <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
           </>
       )
