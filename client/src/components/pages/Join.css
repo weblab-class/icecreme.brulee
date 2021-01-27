@@ -68,7 +68,9 @@
     background: #ED8A8A;
     border-radius: 66px;
 }
-
+.circle1:hover{
+    opacity: 0.8;
+}
 
 .circle2{
     position: fixed;
@@ -80,6 +82,9 @@
 
     background: #ED8A8A;
     border-radius: 66px;
+}
+.circle2:hover{
+    opacity: 0.8;
 }
 
 #jointxt{

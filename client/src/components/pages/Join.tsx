@@ -17,10 +17,16 @@ interface Props {
     setCode: (string) => void;
 }
 
+interface State {
+    hasJoinedGame: boolean;
+}
 
-class Join extends Component<Props & RouteComponentProps, {}> {
+class Join extends Component<Props & RouteComponentProps, State> {
     constructor(props) {
         super(props);
+        this.state = {
+            hasJoinedGame: true
+        }
     }
 
     getRandomNumber = (min: number, max: number) => {
@@ -38,6 +44,11 @@ class Join extends Component<Props & RouteComponentProps, {}> {
         return newCode;
     }
 
+    joinGame = (code: string) => {
+        this.props.setCode(code);
+        this.setState({hasJoinedGame:true});
+    }
+
     render() {
         return (
             <>
@@ -45,20 +56,20 @@ class Join extends Component<Props & RouteComponentProps, {}> {
                 <h2 id="title">Create / Join Game</h2>
             </div>
             <div className = "rectangle2">
-                <div className = "circle1">
-                    <div className = "Create" onClick={()=>{this.props.setCode(this.generateCode())}}>
+                <div className = "circle1" onClick={()=>{this.props.setCode(this.generateCode())}}>
+                    <div className = "Create" >
                         <h2 id="jointxt">Create game</h2>
                     </div>
                 </div>
 
-                <div className = "circle2">
+                <div className = "circle2" onClick={()=>{this.setState({hasJoinedGame:false})}}>
                     <div className = "Join">
                         <h2 id="jointxt">Join game</h2>
                     </div>
                 </div>
-            <div className = "Submit">
-                <NewCodeInput setCode={this.props.setCode}/>
-            </div>
+            {!this.state.hasJoinedGame ? (<div className = "Submit">
+                <NewCodeInput setCode={this.joinGame}/>
+            </div>):null}
 
             </div>
             </>
