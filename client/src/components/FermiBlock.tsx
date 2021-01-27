@@ -6,6 +6,8 @@ import { Button, Icon } from 'semantic-ui-react';
 import CircleButton from "./CircleButton";
 import { post } from "../utilities";
 import RangeSlider from 'react-bootstrap-range-slider';
+import { RouteComponentProps } from "@reach/router";
+
 
 //const ButtonExampleCircular = () => <Button circular icon='settings' />
 
@@ -19,7 +21,7 @@ interface State {
     value: number;
 }
 
-class FermiBlock extends Component<Props, State> {
+class FermiBlock extends Component<Props & RouteComponentProps, State> {
     constructor(props) {
         super(props);
     }

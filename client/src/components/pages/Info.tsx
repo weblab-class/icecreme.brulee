@@ -33,7 +33,7 @@ interface Props {
           <div id = "greeting">
             <h2> Welcome {this.props.player.name}! </h2>
           </div>
-          <div className="rectangle" />
+          <div className="rectangle">
 
           <div className="Title">
               {/* <h2>Rules</h2> */}
@@ -63,13 +63,13 @@ interface Props {
                 The turn continues, the person who was previously asked a question will ask his/her neighbor, and so forth.
               </li>
             </ul>
-
             
           </div>
           
           <div className="Button">
             <Button onClick = {this.goToSetup}> Back </Button>
           </div>
+        </div>
 
           <img className = 'Icecreme1' src="https://i.imgur.com/kdi2Sel.png" title="source: imgur.com" width="100"/>
 
