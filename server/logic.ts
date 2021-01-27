@@ -115,7 +115,7 @@ export const removePlayer = (id:String, code:string) => {
     if (code.length > 0) {
         const currentGameState = codeToGameState.get(code);
         if (currentGameState) {
-            console.log(`Player ${currentGameState.idToPlayerMap.get(String(id))} left room ${code}`)
+            console.log(`Player ${currentGameState.idToPlayerMap.get(String(id))!.name} left room ${code}`)
             currentGameState.playerList = currentGameState.playerList.filter((player) => player._id !== id)
             currentGameState.idToPlayerMap.delete(String(id));
         }
@@ -123,7 +123,7 @@ export const removePlayer = (id:String, code:string) => {
     else {
         codeToGameState.forEach((value, key)=>{
             const currentGameState = value;
-            console.log(`Player ${currentGameState.idToPlayerMap.get(String(id))} left room ${code}`)
+            console.log(`Player ${currentGameState.idToPlayerMap.get(String(id))!.name} left room ${key}`)
             currentGameState.playerList = currentGameState.playerList.filter((player) => player._id !== id)
             currentGameState.idToPlayerMap.delete(String(id));
         })
