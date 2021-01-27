@@ -14,6 +14,8 @@ import { socket } from '../../client-socket';
 const GOOGLE_CLIENT_ID = "1029457388024-o249v3ppd6up5tpigtvelkjsv3rgirj0.apps.googleusercontent.com";
 import { navigate } from "@reach/router";
 import Chat from "../Chat";
+import { Button, Input } from 'semantic-ui-react';
+
 
 type Props = {
   userId: String;
@@ -92,13 +94,13 @@ class Game extends Component<Props & RouteComponentProps, State> {
     this.setState({isRPSPlayer:false, isChosenPlayer:false});
   }
 
-  getFermiQuestion = () => {
-    get("fermi", {gameCode:this.props.gameCode}).then((data) => {
-      this.setState({fermiQuestion: data});
-      console.log('Q:')
-      console.log(data);
-    });
-  }
+  // getFermiQuestion = () => {
+  //   get("fermi", {gameCode:this.props.gameCode}).then((data) => {
+  //     this.setState({fermiQuestion: data});
+  //     console.log('Q:')
+  //     console.log(data);
+  //   });
+  // }
 
   componentDidMount() {
     get("/api/whoami")
@@ -253,7 +255,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
         <h2>{this.state.questionText}</h2>
         <h2>{this.state.chooseText}</h2>
 
-        {!this.state.gameStarted ? (<button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</button>):null}
+        {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn}> {this.state.buttonText}</Button>):null}
         {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
         {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
 
