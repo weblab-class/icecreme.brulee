@@ -17,6 +17,7 @@ interface Props {
     icon?: SemanticICONS;
     size?: SemanticSIZES;
     disableRPS: () => void;
+    gameCode: string;
     //onClick?: function;
 }
 
@@ -26,7 +27,7 @@ class CircleButton extends Component<Props> {
     }
 
     handleClick = () => {
-        const rps = {rpsChoice: this.props.text};
+        const rps = {rpsChoice: this.props.text, gameCode:this.props.gameCode};
         this.props.disableRPS();
         post('/api/rps', rps);
     }

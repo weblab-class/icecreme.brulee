@@ -77,9 +77,12 @@ class App extends Component<{}, State> {
   }
 
   setGameCode = (code: string) => {
-    console.log(code);
     this.setState({gameCode: code});
     navigate("/game");
+    post("/api/newgame", {gameCode:code}).then((value)=>{
+      console.log('redirecting...')
+      // post("/api/initsocket", { socketid: socket.id , gameCode:code});
+    });
   }
 
   componentDidMount() {
