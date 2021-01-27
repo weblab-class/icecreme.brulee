@@ -73,15 +73,19 @@ class Setup extends Component<Props & RouteComponentProps, State> {
 
     return (
       <div className = "setupContainer">
-          <input placeholder='Name' className = "center setupInput" onChange = {this.nameChange}></input>
+          <input placeholder='Enter your name' className = "center setupInput" onChange = {this.nameChange}></input>
                     <div className = "newCircle center" style={{background:this.state.color}}>{this.state.name}</div>
                     <TwitterPicker  className = "center" color={ this.state.color }
                         onChangeComplete={ this.onChangeColor}
                         //onSwatchHover = {this.onChangeColor}
                     ></TwitterPicker>
-
+              <div className = "Submit">
                 <Button onClick = {this.handleSubmit}>Submit</Button>
+              </div>
+              <div className = "Info">
                 <Button onClick = {this.goToInfo}>Game Info</Button>
+              </div>
+                
 
         {/* I think below are old code */}
       {/* <div>
