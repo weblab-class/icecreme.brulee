@@ -11,8 +11,9 @@ import RangeSlider from 'react-bootstrap-range-slider';
 
 
 interface Props {
-    isAnsweringPlayer: boolean;
+    isRPSPlayer: boolean;
     isChosenPlayer: boolean;
+    fermiText: string;
 }
 
 interface State {
@@ -29,8 +30,8 @@ class FermiBlock extends Component<Props, State> {
     }
 
     submitAnswer = () => {
-        const fermiAns = {fermiAns: this.state.value};
-        post('/api/fermi', fermiAns)
+        const fermiAns = {fermiAns: this.state.value, fermiText: this.props.fermiText};
+        post('/api/fermi', fermiAns);
     }
 
     // handleClick = (choice) => {
@@ -44,7 +45,7 @@ class FermiBlock extends Component<Props, State> {
         return (
             <div>
                 <h2>Fermi's Question</h2> 
-                {(this.props.isAnsweringPlayer || this.props.isChosenPlayer) ? (<>
+                {(this.props.isRPSPlayer || this.props.isChosenPlayer) ? (<>
                     <RangeSlider
                         value={0}
                         onChange={this.setValue}

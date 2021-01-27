@@ -93,7 +93,11 @@ class Game extends Component<Props & RouteComponentProps, State> {
   }
 
   getFermiQuestion = () => {
-    get("fermi", {gameCode:this.props.gameCode});
+    get("fermi", {gameCode:this.props.gameCode}).then((data) => {
+      this.setState({fermiQuestion: data});
+      console.log('Q:')
+      console.log(data);
+    });
   }
 
   componentDidMount() {
@@ -162,6 +166,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
       //   post("/api/update", {});
       // }
     });
+    // this.getFermiQuestion();
 
 
 
