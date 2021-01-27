@@ -1,0 +1,27 @@
+:root {
+    --light-orange: #ffe7c2ff;
+    --orange: #ffd35cff;
+    --mint: #9ee6c9ff;
+    --green: #00e08eff;
+    --light-blue: #8ed1fcff;
+    --off-white-blue: #C3E8FD;
+    --blue: #0693e3ff;
+    --gray-blue: #abb8c3ff;
+    --gray: #C3CDD5;
+    --pink: #f58eaaff;
+    --light-pink: #fdc3c3ff;
+    --purple: #e1adffff;
+    --light-purple: #D7C9E3;
+    --off-white-purple: #FAF5FF;
+  }
+
+.fermiContainer{
+    height: 200px;
+    width: 400px;
+    border-radius: 25px;
+    padding-left: 80px;
+    padding-top: 20px;
+    background: var(--light-blue);
+    justify-content: center;
+}
+

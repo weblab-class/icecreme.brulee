@@ -7,6 +7,7 @@ import CircleButton from "./CircleButton";
 import { post } from "../utilities";
 import RangeSlider from 'react-bootstrap-range-slider';
 import { RouteComponentProps } from "@reach/router";
+import "./FermiBlock.css";
 
 
 //const ButtonExampleCircular = () => <Button circular icon='settings' />
@@ -15,15 +16,24 @@ import { RouteComponentProps } from "@reach/router";
 interface Props {
     isAnsweringPlayer: boolean;
     isChosenPlayer: boolean;
+    question?: String;
+    answer?: number;
 }
 
 interface State {
     value: number;
+    min: number;
+    max: number;
 }
 
 class FermiBlock extends Component<Props & RouteComponentProps, State> {
     constructor(props) {
         super(props);
+        this.state = {
+            value: null,
+            min: 0,
+            max: (1.5+Math.random())*this.props.answer, //can change the way this is calculated
+        }
     }
     //state
     setValue = (event) => {
@@ -44,14 +54,19 @@ class FermiBlock extends Component<Props & RouteComponentProps, State> {
     render() {
 
         return (
-            <div>
-                <h2>Fermi's Question</h2> 
+            <div className = "fermiContainer">
+                <h3>Fermi's Questions</h3> 
+                <p>insert question here</p>
                 {(this.props.isAnsweringPlayer || this.props.isChosenPlayer) ? (<>
                     <RangeSlider
-                        value={0}
+                        value={this.state.value || this.state.max/2}
                         onChange={this.setValue}
                         min = {0}
-                        max = {100}
+                        max = {this.state.max}
+                        tooltip = {'on'}
+                        variant = 'dark'
+                        disable = {false}
+                        size = 'lg'
                     />
 
                     <button onClick = {this.submitAnswer}>Submit</button>
