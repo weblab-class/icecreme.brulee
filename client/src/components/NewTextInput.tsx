@@ -114,7 +114,7 @@ class NewCodeInput extends Component<NewCodeInputProps, {}> {
     render() {
         return (
             <div className = "enter">
-            <NewTextInput defaultText='Enter game code' onSubmit={this.moveToGame}/>
+                <NewTextInput defaultText='Enter game code' onSubmit={this.moveToGame}/>
             </div>
         )
     }

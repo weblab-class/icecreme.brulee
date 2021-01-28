@@ -6,6 +6,11 @@ kill -9 8390
 
 or pkill -9 node
 
+APIs used:
+Semantic UI
+react-bootstrap-range-slider (https://reactjsexample.com/a-range-slider-component-for-react-bootstrap/)
+react-color (https://casesandberg.github.io/react-color/)
+
 interface User {
     _id: string;
     is_admin?: boolean;

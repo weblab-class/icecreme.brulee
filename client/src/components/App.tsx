@@ -22,6 +22,7 @@ import Login from "./pages/Login";
 import Setup from "./pages/Setup";
 import Info from "./pages/Info";
 import Join from "./pages/Join";
+import GameRoomLook from "./pages/GameRoomLook";
 //import RockPaperScissorss from "./RockPaperScissors";
 //import '../semantic-ui-css/semantic.min.css';
 
@@ -211,6 +212,9 @@ class App extends Component<{}, State> {
   goToFermi = () => {
     navigate("/fermi")
   }
+  goToGameRoom = () => {
+    navigate("/gameroom")
+  }
 
   render() {
     // NOTE:
@@ -220,8 +224,7 @@ class App extends Component<{}, State> {
       {/* <RockPaperScissors /> */}
       {/* <button onClick = {this.gotoSetup}>Setup</button> */}
         <Router>
-          {/* <FermiBlock path = '/fermi' isChosenPlayer = {true} isAnsweringPlayer = {true}>
-          </FermiBlock> */}
+          <GameRoomLook path = '/gameroom' />
           {/* <Skeleton
             path="/skeleton"
             handleLogin={this.handleLogin}
@@ -265,8 +268,7 @@ class App extends Component<{}, State> {
           />
           <NotFound default={true} />
         </Router>
-
-        {/* <button onClick = {this.goToFermi}>Fermis</button> */}
+        {/* <button onClick = {this.goToGameRoom}>GameRoom</button> */}
 
         {/* <PlayerList playerList={this.state.activePlayers}/>
         <h2>{this.state.questionText}</h2>

@@ -1,18 +1,18 @@
-/* .input-text{
-    position: fixed;
+.input-text{
+    /* position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
     text-align: center;
-} */
+}
 
 #input{
-    position: fixed;
+    /* position: fixed; */
     width: 200px;
     height: 50px;
     
-    margin-left: 33%;
-    margin-top: 35%;
+    /* margin-left: 33%;
+    margin-top: 35%; */
 
     background: #FBFBFB;
     border-radius: 10px;
@@ -28,11 +28,11 @@
     color: rgba(0, 0, 0, 0.4);
 }
 
-#button{
+/* #button{
     position: fixed;
     margin-left: 62%;
     margin-top: 36%;
-}
+} */
 /* .enter{
     position: fixed;
     top: 50%;

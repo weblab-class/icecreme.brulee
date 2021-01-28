@@ -257,41 +257,51 @@ class Game extends Component<Props & RouteComponentProps, State> {
 
     render() {
       return (
-        <>
-        <div className='Login'>
-        {this.props.userId ? (
-          <GoogleLogout
-            clientId={GOOGLE_CLIENT_ID}
-            buttonText="Logout"
-            onLogoutSuccess={this.props.handleLogout}
-            onFailure={() => console.log(`Failed to logout.`)}
-          />
-        ) : (
-          <GoogleLogin
-            clientId={GOOGLE_CLIENT_ID}
-            buttonText="Login"
-            onSuccess={this.props.handleLogin}
-            onFailure={(err) => console.log(err)}
-          />
-        )}
-        </div>
-        <PlayerList playerList={this.state.activePlayers}/>
-        <h1>{this.state.codeText}</h1>
-        <h2>{this.state.questionText}</h2>
-        <h2>{this.state.chooseText}</h2>
+        <div className = 'gameContainer'>
 
-        {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn || this.state.mode.length === 0}> {this.state.buttonText}</Button>):null}
-        {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
-        {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null}
-
-        {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='rps' ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
-        {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='fermi' ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion} answer={this.state.fermiAnswer}/>):null}
-        <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
-        {(!this.state.gameStarted && this.state.loggedIn)? (<span>
-          <Button type='submit' onClick={()=>{this.setMode('rps')}} disabled={this.state.mode==='rps'}>Classic Mode</Button>
-          <Button type='submit' onClick={()=>{this.setMode('fermi')}} disabled={this.state.mode==='fermi'}>Fermi Mode</Button>
-        </span>) : null}
-          </>
+          <div className = "gameDisplay">
+            <div className = "gameDisplayHeader">
+              <span>
+              <h4>{this.state.codeText}</h4>
+              {(!this.state.gameStarted && this.state.loggedIn)? (<span>
+              <Button type='submit' onClick={()=>{this.setMode('rps')}} disabled={this.state.mode==='rps'}>Classic Mode</Button>
+              <Button type='submit' onClick={()=>{this.setMode('fermi')}} disabled={this.state.mode==='fermi'}>Fermi Mode</Button>
+              </span>) : null}
+              </span>
+            </div>
+            <div className = "gameDisplayPlay">
+            {!this.state.gameStarted ? (<Button type='submit' onClick={this.startGame} disabled={this.state.activePlayers.length <= 1 || !this.state.loggedIn || this.state.mode.length === 0}> {this.state.buttonText}</Button>):null}
+              <h4>{this.state.questionText}</h4>
+              <h4>{this.state.chooseText}</h4>
+              <PlayerList playerList={this.state.activePlayers}/>              {this.state.isAskingPlayer ? (<NewQuestionInput isAskingPlayer={this.state.loggedIn && this.state.isAskingPlayer} answerer={this.state.answeringPlayer} disableQuestionSubmit={this.disableQuestionSubmit}/>):null}
+              {this.state.isAnsweringPlayer ? (<PlayerButtonList isAnsweringPlayer={this.state.loggedIn && this.state.isAnsweringPlayer} playerList={this.state.activePlayers} hasChosenPlayer={this.state.hasChosenPlayer} userId={this.state.userId} disableButtonList={this.disableButtonList}/>):null} 
+              {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='rps' ? (<RockPaperScissors isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode}/>):null}
+              {(this.state.isRPSPlayer || this.state.isChosenPlayer) && this.state.mode==='fermi' ? (<FermiBlock isChosenPlayer={this.state.loggedIn && this.state.isChosenPlayer} isRPSPlayer = {this.state.loggedIn && this.state.isRPSPlayer} disableRPS={this.disableRPS} gameCode={this.props.gameCode} fermiText={this.state.fermiQuestion} answer={this.state.fermiAnswer}/>):null}
+            </div>
+          </div>
+          <div className = "gameSidebar">
+              <div className = "gameSidebarChat">
+                <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
+              </div>
+              <div className='Login'>
+                {this.props.userId ? (
+                  <GoogleLogout
+                    clientId={GOOGLE_CLIENT_ID}
+                    buttonText="Logout"
+                    onLogoutSuccess={this.props.handleLogout}
+                    onFailure={() => console.log(`Failed to logout.`)}
+                  />
+                ) : (
+                  <GoogleLogin
+                    clientId={GOOGLE_CLIENT_ID}
+                    buttonText="Login"
+                    onSuccess={this.props.handleLogin}
+                    onFailure={(err) => console.log(err)}
+                  />
+                )}
+              </div>
+            </div>
+      </div>
       )
       }
     }

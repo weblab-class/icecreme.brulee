@@ -57,7 +57,7 @@ class Chat extends Component<Props, State> {
   }
   render() {
     return (
-      <div className="u-flexColumn Chat-container">
+      <div className="Chat-container">
         <div className="Chat-historyContainer">
           {this.state.data.messages.map((m, i) => (
             <SingleMessage message={m} key={i} />

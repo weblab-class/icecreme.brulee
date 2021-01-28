@@ -1,17 +1,18 @@
 .Chat-container {
-    height: 50%;
+    height: 90%;
+    width: 100%;
   }
   
   .Chat-newContainer {
     width: 100%;
-    position: fixed;
-    margin-left: 5%;
+    height: 10%;
+    /* position: fixed; */
   }
   
   .Chat-historyContainer {
-    position: fixed;
-    margin-left: 85%;
-    flex-grow: 1;
+    /* position: fixed; */
+    /* margin-left: 85%; */
+    /* flex-grow: 1; */
     overflow-y: auto;
   }
   

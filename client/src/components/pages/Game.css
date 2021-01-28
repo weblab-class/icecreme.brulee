@@ -1,0 +1,78 @@
+:root {
+    --light-orange: #ffe7c2ff;
+    --orange: #ffd35cff;
+    --mint: #9ee6c9ff;
+    --green: #00e08eff;
+    --light-blue: #8ed1fcff;
+    --off-white-blue: #C3E8FD;
+    --blue: #0693e3ff;
+    --gray-blue: #abb8c3ff;
+    --gray: #C3CDD5;
+    --pink: #f58eaaff;
+    --light-pink: #fdc3c3ff;
+    --purple: #e1adffff;
+    --light-purple: #D7C9E3;
+    --off-white-purple: #FAF5FF;
+  }
+
+.gameContainer{
+    display: flex;
+    background-color: var(--off-white-blue);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100vh;
+    width: 100vw;
+}
+
+.gameDisplay{
+    flex-grow: 3;
+    background-color: var(--blue);
+    flex-wrap: wrap;
+    padding: 1%;
+}
+
+.gameSidebar{
+    flex-grow: 1;
+    background-color: var(--purple);
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.gameDisplayHeader{
+    /* display: flex; */
+    height: 15%;
+    background-color: var(--off-white-blue);
+    border-radius: 10px;
+    margin: 5px;
+    padding: 10px;
+}
+
+.gameDisplayPlay{
+    /* display: flex; */
+    height: 85%;
+    background-color: var(--off-white-blue);
+    border-radius: 10px;
+    margin: 5px;
+    padding: 3%;
+    justify-content: center;
+}
+
+.gameSidebarChat{
+    /* display: flex; */
+    width: 100%;
+    height: 50%;
+    background-color: var(--light-purple);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+}
+
+
+
+.upperRight{
+    height: 350px;
+    width: 500px;
+    margin-top: 10px;
+    margin-right: 5px;
+    background: var(--light-purple); 
+}
