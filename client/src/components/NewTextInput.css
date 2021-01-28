@@ -3,10 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); */
-    display:flex;
     text-align: center;
-    margin-left: 90%;
-    margin-top: 90%;
 }
 
 #input{
@@ -27,19 +24,15 @@
     line-height: 45px;
 /* identical to box height */
 
-    display: flex;
-    margin-left: 5%;
-    margin-top: 120%;
-
 
     color: rgba(0, 0, 0, 0.4);
 }
 
-#button{
-    display: flex;
-    margin-left: 110%;
-    margin-top: -20%;
-}
+/* #button{
+    position: fixed;
+    margin-left: 62%;
+    margin-top: 36%;
+} */
 /* .enter{
     position: fixed;
     top: 50%;
