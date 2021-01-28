@@ -45,7 +45,7 @@ class PlayerButtonList extends Component<Props, State>
         if (this.props.isAnsweringPlayer && !this.state.hasChosenPlayer) {
         return (
             <>
-                <div className="Button">
+                <div>
                     <h3>Choose a player...</h3>
                     {/* {this.state.chosenPlayer._id.length === 0 ? <h3>Choose a player...</h3>:<h3>{`Chose ${this.state.chosenPlayer.name}`}</h3>} */}
                     {this.props.playerList.filter((player) => player._id !== this.props.userId).map((player, i) => (
@@ -68,9 +68,6 @@ class PlayerButtonList extends Component<Props, State>
                     )
                     )
                     }
-                    {/* <button type='reset' onClick={this.resetPlayer}>
-                        Reset player
-                    </button> */}
                 </div>
             </>
         )}

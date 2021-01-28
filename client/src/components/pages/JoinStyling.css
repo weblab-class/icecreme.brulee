@@ -1,0 +1,116 @@
+.joinContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 80vh;
+    width: 80vw;
+    align-content: center;
+    text-align: center;
+    background-color: #FED8D8;
+    margin: auto;
+}
+
+.Join{
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.Create{
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.rectangle1{
+    margin-top: 4%;
+    margin: auto;
+    height: 10%;
+    width: 70%;
+    background: linear-gradient(0deg, #FED8D8, #FED8D8), #FED8D8;
+    border-radius: 16px;
+    justify-content: center;
+}
+
+#title{
+    margin-top: 3%;
+    margin: auto;
+
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 48px;
+    line-height: 60px;
+    /* identical to box height */
+
+
+    color: #000000;
+}
+
+.rectangle2{
+    width: 70%;
+    height: 80%;
+    margin-top: 1%;
+    margin: auto;
+
+    background: #FFE7C2;
+    border-radius: 21px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.circle1{
+    width: 546px;
+    height: 78px;
+    margin-top: 6%;
+
+    background: #ED8A8A;
+    border-radius: 66px;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+.circle1:hover{
+    opacity: 0.8;
+
+}
+
+.circle2{
+    width: 546px;
+    height: 78px;
+    margin-top: 5%;
+    margin: auto;
+
+    background: #ED8A8A;
+    border-radius: 66px;
+    text-align: center;
+}
+.circle2:hover{
+    opacity: 0.8;
+}
+
+#jointxt{
+    width: 546px;
+    height: 60px;
+    /* left: 50%; */
+    /* top: 50%; */
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 35px;
+    line-height: 60px;
+    text-align: center;
+    /* identical to box height */
+
+
+    color: #000000;
+}
+
+.Submit{
+    /* position: fixed; */
+    margin: auto;
+    margin-top: 1%;
+}
