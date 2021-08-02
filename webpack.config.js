@@ -79,9 +79,9 @@ module.exports = {
     contentBase: "./client/dist",
     hot: true,
     proxy: {
-      "/api": "http://localhost:3000",
+      "/api": "http://localhost:8000",
       "/socket.io/*": {
-        target: "http://localhost:3000",
+        target: "http://localhost:8000",
         ws: true,
       },
     },

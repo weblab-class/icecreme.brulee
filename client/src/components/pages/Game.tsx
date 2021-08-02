@@ -283,7 +283,7 @@ class Game extends Component<Props & RouteComponentProps, State> {
               <div className = "gameSidebarChat">
                 <Chat userId={this.props.userId} gameCode={this.props.gameCode} name={this.state.currentPlayer.name}/>
               </div>
-              <div className='Login'>
+              <div className='Login2'>
                 {this.props.userId ? (
                   <GoogleLogout
                     clientId={GOOGLE_CLIENT_ID}

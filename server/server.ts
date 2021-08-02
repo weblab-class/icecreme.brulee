@@ -77,7 +77,7 @@ app.use((err: any, _req: Request, res: Response) => {
   });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 socketManager.init(server);
 server.listen(port, () => {

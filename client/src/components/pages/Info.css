@@ -2,6 +2,7 @@
 .Title{
     position: fixed;
     left: 50%;
+    top: 20%;
     transform: translate(-50%);
     text-align: center;
 }
@@ -18,7 +19,7 @@
 
 #greeting{
     position: fixed;
-    margin-top: 1%;
+    top: 5%;
     left: 50%;
     transform: translate(-50%);
     text-align: center;
@@ -36,13 +37,13 @@
     height: 500px;
 
     background: #DEEFF5;
-    border-radius: 32%;
+    border-radius: 88%;
   }
 
 .Button{
     position: fixed;
     left: 50%;
-    margin-top: 28%;
+    top: 90%;
     transform: translate(-50%);
     text-align: center;
 }

@@ -17,7 +17,7 @@
 
 .gameContainer{
     display: flex;
-    background-color: var(--off-white-blue);
+    background-color: var(--blue);
     flex-direction: row;
     flex-wrap: nowrap;
     height: 100vh;
@@ -33,9 +33,13 @@
 
 .gameSidebar{
     flex-grow: 1;
+    /* margin-top: 5%; */
+    margin: 20px;
     background-color: var(--purple);
     flex-wrap: wrap;
     padding: 10px;
+    height: 85%;
+    border-radius: 10px;
 }
 
 .gameDisplayHeader{
@@ -49,7 +53,7 @@
 
 .gameDisplayPlay{
     /* display: flex; */
-    height: 85%;
+    height: 83%;
     background-color: var(--off-white-blue);
     border-radius: 10px;
     margin: 5px;
@@ -59,7 +63,7 @@
 
 .gameSidebarChat{
     /* display: flex; */
-    width: 100%;
+    width: 80%;
     height: 50%;
     background-color: var(--light-purple);
     border-radius: 10px;
@@ -75,4 +79,10 @@
     margin-top: 10px;
     margin-right: 5px;
     background: var(--light-purple); 
+}
+
+.Login2{
+    position: absolute;
+    top: 90%;
+    left: 77%;
 }
